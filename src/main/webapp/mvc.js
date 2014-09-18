@@ -15,7 +15,7 @@
 
 //@require @packageOverrides
 Ext.Loader.setConfig({
-	enabled : true
+	enabled: true
 });
 
 /*******************************************************************************
@@ -23,7 +23,7 @@ Ext.Loader.setConfig({
  */
 var loginUser, imageSizeMap, orderAutoLoadTime, subCommissionBase, resourceUrl, commonTreeNodes;
 
-(function() {
+(function () {
 	// var queryCurrentInfo = function() {
 	// //Ajax请求当前登录用户信息
 	// Ext.Ajax.request({
@@ -54,111 +54,186 @@ var loginUser, imageSizeMap, orderAutoLoadTime, subCommissionBase, resourceUrl, 
 	// }
 	// });
 	// 公用菜单项
-	commonTreeNodes = [ {
-		text : '运输管理',
-		expanded : true,
-		children : [ {
-			text : '录入运单',
-			leaf : true,
-			id : 'EnterOrder'
-		}, {
-			text : '运单管理',
-			leaf : true,
-			id : 'OrderManager'
-		}, {
-			text : '装车配载',
-			leaf : true,
-			id : 'MoveAssignment'
-		}, {
-			text : '车次管理',
-			leaf : true,
-			id : 'MoveManager'
-		}, {
-			text : '配送自提',
-			leaf : true,
-			id : 'InoutManager'
-		} ]
-	}, {
-		text : '异常处理',
-		expanded : true,
-		children : [ {
-			text : '修改密码1',
-			leaf : true,
-			id : 'ModifyPassword1'
-		} ]
-	}, {
-		text : '报表分析',
-		expanded : true,
-		children : [ {
-			text : '修改密码2',
-			leaf : true,
-			id : 'ModifyPassword2'
-		} ]
-	}, {
-		text : '财务结算',
-		expanded : true,
-		children : [ {
-			text : '修改密码3',
-			leaf : true,
-			id : 'ModifyPassword3'
-		} ]
-	}, {
-		text : '基础资料',
-		expanded : true,
-		children : [ {
-			text : '车辆管理',
-			leaf : true,
-			id : 'VehicleManager'
-		}, {
-			text : '用户管理',
-			leaf : true,
-			id : 'UserManager'
-		} ]
-	} ];
+	commonTreeNodes = [
+		{
+			text: '运输管理',
+			expanded: true,
+			children: [
+				{
+					text: '录入运单',
+					leaf: true,
+					id: 'EnterOrder',
+					action: 'F'
+				},
+				{
+					text: '运单管理',
+					leaf: true,
+					id: 120,
+					action: 'W'
+				},
+				{
+					text: '装车配载',
+					leaf: true,
+					id: 'MoveAssignment',
+					action: 'F'
+				},
+				{
+					text: '发车管理',
+					leaf: true,
+					id: 117,
+					action: 'W'
+				},
+				{
+					text: '配送自提',
+					leaf: true,
+					id: 113,
+					action: 'W'
+				},
+				{
+					text: '库存管理',
+					leaf: true,
+					id: 115,
+					action: 'W'
+				}
+			]
+		},
+		{
+			text: '异常处理',
+			children: [
+				{
+					text: '异常管理',
+					leaf: true,
+					id: 1080,
+					action: 'W'
+				},
+				{
+					text: '理赔管理',
+					leaf: true,
+					id: 1089,
+					action: 'W'
+				}
+			]
+		},
+		{
+			text: '报表分析',
+			children: [
+				{
+					text: '库存分析',
+					leaf: true,
+					id: 1088,
+					action: 'W'
+				},
+				{
+					text: '回单分析',
+					leaf: true,
+					id: 1087,
+					action: 'W'
+				},
+				{
+					text: '毛利分析',
+					leaf: true,
+					id: 1086,
+					action: 'W'
+				},
+				{
+					text: '时效分析',
+					leaf: true,
+					id: 1085,
+					action: 'W'
+				}
+			]
+		},
+		{
+			text: '财务结算',
+			children: [
+				{
+					text: '费用管理',
+					leaf: true,
+					id: 1084,
+					action: 'W'
+				},
+				{
+					text: '应收管理',
+					leaf: true,
+					id: 1083,
+					action: 'W'
+				},
+				{
+					text: '应付管理',
+					leaf: true,
+					id: 1082,
+					action: 'W'
+				},
+				{
+					text: '资金管理',
+					leaf: true,
+					id: 1081,
+					action: 'W'
+				}
+			]
+		},
+		{
+			text: '基础资料',
+			children: [
+				{
+					text: '车辆管理',
+					leaf: true,
+					id: 123,
+					action: 'W'
+				},
+				{
+					text: '用户管理',
+					leaf: true,
+					id: 108,
+					action: 'W'
+				},
+				{
+					text: '合作伙伴管理',
+					leaf: true,
+					id: 110,
+					action: 'W'
+				}
+			]
+		},
+		{
+			text: '系统管理',
+			children: [
+				{
+					text: '客户管理',
+					leaf: true,
+					id: 100,
+					action: 'W'
+				},
+				{
+					text: '组织管理',
+					leaf: true,
+					id: 101,
+					action: 'W'
+				},
+				{
+					text: '窗体管理',
+					leaf: true,
+					id: 104,
+					action: 'W'
+				},
+				{
+					text: '字段管理',
+					leaf: true,
+					id: 105,
+					action: 'W'
+				}
+			]
+		}
+	];
 })();
 
-Ext.define('SystemUtil', {
-	singleton : true,
-	getImageUrl : function(url, type) {
-		if (Ext.isEmpty(url)) {
-			return url;
-		}
-		var strs = url.split('.jpg');
-		if (strs.length == 2) {
-			return Common.config.RESOURCE_URL + strs[0] + imageSizeMap[type]
-					+ '.jpg';
-		}
-		strs = url.split('.png');
-		if (strs.length == 2) {
-			return Common.config.RESOURCE_URL + strs[0] + imageSizeMap[type]
-					+ '.png';
-		}
-		strs = url.split('.gif');
-		if (strs.length == 2) {
-			return Common.config.RESOURCE_URL + strs[0] + imageSizeMap[type]
-					+ '.gif';
-		}
-		strs = url.split('.bmp');
-		if (strs.length == 2) {
-			return Common.config.RESOURCE_URL + strs[0] + imageSizeMap[type]
-					+ '.bmp';
-		}
-		return url;
-	},
-	getOrderAutoLoadTime : function() {
-		return orderAutoLoadTime;
-	},
-	getSubCommissionBase : function() {
-		return subCommissionBase;
-	}
-});
 
 Ext.define('CurrentUser', {
-	singleton : true,
+	singleton: true,
 	/**
 	 * 当前登录用户对象
 	 */
-	getCurrentUser : function() {
+	getCurrentUser: function () {
 		if (!Ext.isEmpty(loginUser)) {
 			return loginUser;
 		}
@@ -166,7 +241,7 @@ Ext.define('CurrentUser', {
 	/**
 	 * 当前登录用户的用户名
 	 */
-	getRealName : function() {
+	getRealName: function () {
 		if (!Ext.isEmpty(loginUser)) {
 			return CurrentUser.getCurrentUser().realName;
 		}
@@ -174,7 +249,7 @@ Ext.define('CurrentUser', {
 	/**
 	 * 当前登录用户的用户名
 	 */
-	getLoginAccount : function() {
+	getLoginAccount: function () {
 		if (!Ext.isEmpty(loginUser)) {
 			return CurrentUser.getCurrentUser().loginAccount;
 		}
@@ -182,7 +257,7 @@ Ext.define('CurrentUser', {
 	/**
 	 * 当前登录用户类型编码
 	 */
-	getUserTypeCode : function() {
+	getUserTypeCode: function () {
 		if (!Ext.isEmpty(loginUser)) {
 			return CurrentUser.getCurrentUser().userType;
 		}
@@ -190,27 +265,26 @@ Ext.define('CurrentUser', {
 	/**
 	 * 当前登录用户类型名称
 	 */
-	getUserTypeName : function() {
+	getUserTypeName: function () {
 		if (!Ext.isEmpty(loginUser)) {
-			return DataDictionary.rendererSubmitToDisplay(CurrentUser
-					.getUserTypeCode());
+			return DataDictionary.rendererSubmitToDisplay(CurrentUser.getUserTypeCode());
 		}
 	},
 	/**
 	 * 当前登录用户菜单
 	 */
-	getUserMenus : function() {
+	getUserMenus: function () {
 		return commonTreeNodes;
 	}
 });
 
 Ext.application({
-	models : [ 'OrderModel', 'VehicleModel' ],
-	stores : [ 'MenuTreeStore', "VehicleStore", 'OrderStore' ],
-	views : [ 'Viewport', 'ModifyPassword', 'EnterOrder', 'OrderManager',
-			'VehicleManager' ],
-	autoCreateViewport : true,
-	appFolder : 'mvc',
-	name : 'MyApp'
+	models: [ 'OrderModel' ],
+	stores: [ 'MenuTreeStore', 'OrderStore' ],
+	views: [ 'ADWindowPanel', 'EnterOrder', 'MoveAssignment', 'Viewport' ],
+	autoCreateViewport: true,
+	appFolder: 'mvc',
+	name: 'MyApp',
+	launch: Lookup.loadRefList
 });
 Ext.QuickTips.init();

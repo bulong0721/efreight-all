@@ -12,8 +12,7 @@
 <script type="text/javascript" src="lib/DwrProxy.js"></script>
 <script type="text/javascript" src="lib/common.js"></script>
 <script type="text/javascript" src="mvc.js"></script>
-<script type="text/javascript" src="dwr/interface/order.js"></script>
-<script type="text/javascript" src="dwr/interface/user.js"></script>
+<script type="text/javascript" src="dwr/interface/facade.js"></script>
 <script type="text/javascript" src="dwr/engine.js"></script>
 <script type="text/javascript" src="dwr/util.js"></script>
 </head>

@@ -4,15 +4,15 @@ import java.util.Map;
 
 import com.freight.common.ADExpression;
 import com.freight.common.PageResult;
-import com.freight.model.CUser;
+import com.freight.model.ADUser;
 import com.freight.service.AbstractService;
 import com.freight.service.UserService;
 
 public class UserServiceImpl extends AbstractService implements UserService {
 
     @Override
-    public PageResult<CUser> search(Map<String, String> paramMap) {
-        return search(CUser.class, paramMap);
+    public PageResult<ADUser> search(Map<String, String> paramMap) {
+        return search(ADUser.class, paramMap);
     }
 
     @Override

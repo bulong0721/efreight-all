@@ -14,7 +14,7 @@ Ext.define('MyApp.store.OrderStore', {
             proxy: {
 				type: 'dwr',
 				passDwrStoreParams: true,
-				dwrFunction: order.search,
+				dwrFunction: facade.searchOrder,
 				reader: {
 					type: 'json',
 					root: 'rows',

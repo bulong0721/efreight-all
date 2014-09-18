@@ -3,26 +3,33 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="acuity" transaction-type="RESOURCE_LOCAL">
 		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-		<class>com.freight.model.CBpartner</class>
-		<class>com.freight.model.CBpartnerContact</class>
-		<class>com.freight.model.CClient</class>
+		<mapping-file>META-INF/adempiere.xml</mapping-file>
+		<class>com.freight.model.ADClient</class>
+		<class>com.freight.model.ADColumn</class>
+		<class>com.freight.model.ADField</class>
+		<class>com.freight.model.ADOrg</class>
+		<class>com.freight.model.ADReference</class>
+		<class>com.freight.model.ADRefList</class>
+		<class>com.freight.model.ADRefListV</class>
+		<class>com.freight.model.ADWindow</class>
+		<class>com.freight.model.ADTable</class>
+		<class>com.freight.model.ADUser</class>
+		<class>com.freight.model.CBPartner</class>
+		<class>com.freight.model.CBPartnerContact</class>
 		<class>com.freight.model.CComplaint</class>
 		<class>com.freight.model.CInout</class>
 		<class>com.freight.model.CInoutLine</class>
 		<class>com.freight.model.CInventory</class>
+		<class>com.freight.model.CLocation</class>
 		<class>com.freight.model.CMove</class>
 		<class>com.freight.model.CMoveLine</class>
 		<class>com.freight.model.CMoveTrack</class>
 		<class>com.freight.model.COrder</class>
 		<class>com.freight.model.COrderLine</class>
-		<class>com.freight.model.COrg</class>
-		<class>com.freight.model.CReference</class>
-		<class>com.freight.model.CReferenceLine</class>
 		<class>com.freight.model.CRegion</class>
-		<class>com.freight.model.CSequence</class>
-		<class>com.freight.model.CUser</class>
 		<class>com.freight.model.CVehicle</class>
 		<class>com.freight.model.CWarehouse</class>
+		<class>com.freight.model.ADFieldV</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/acuity" />
 			<property name="javax.persistence.jdbc.user" value="adempiere" />

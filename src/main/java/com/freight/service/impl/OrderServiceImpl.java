@@ -11,7 +11,7 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
 
     @Override
     public COrder find(int orderId) {
-        COrder order = commonDao.find(COrder.class, orderId);
+        COrder order = find(COrder.class, orderId);
         return order;
     }
 

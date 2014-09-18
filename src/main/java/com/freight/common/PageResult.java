@@ -3,7 +3,7 @@ package com.freight.common;
 import java.io.Serializable;
 import java.util.List;
 
-public class PageResult<T extends EntityBase> implements Serializable {
+public class PageResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

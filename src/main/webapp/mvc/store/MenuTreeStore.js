@@ -13,6 +13,8 @@ Ext.define('MyApp.store.MenuTreeStore', {
                 name: 'leaf'
             },{
                 name: 'id'
+            },{
+	            name: 'action'
             }]
         }, cfg)]);
     }
