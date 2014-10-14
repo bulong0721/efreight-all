@@ -29,8 +29,8 @@ public class COrder extends EntityBase {
 	private String clerkUserID;
 	private String comment;
 	private String commentReceipt;
-	private Integer consigneeBpartnerID;
-	private Integer consignorBpartnerID;
+	private Integer consigneeBPartnerID;
+	private Integer consignorBPartnerID;
 	private BigDecimal costAdditional;
 	private BigDecimal costClaim;
 	private BigDecimal costCommission;
@@ -233,22 +233,22 @@ public class COrder extends EntityBase {
 
 	@Basic
 	@Column(name="consignee_bpartner_id", columnDefinition="INT", nullable=false)
-	public Integer getConsigneeBpartnerID() {
-		return consigneeBpartnerID;
+	public Integer getConsigneeBPartnerID() {
+		return consigneeBPartnerID;
 	}
 
-	public void setConsigneeBpartnerID(Integer consigneeBpartnerID) {
-		this.consigneeBpartnerID = consigneeBpartnerID;
+	public void setConsigneeBPartnerID(Integer consigneeBpartnerID) {
+		this.consigneeBPartnerID = consigneeBpartnerID;
 	}
 
 	@Basic
 	@Column(name="consignor_bpartner_id", columnDefinition="INT", nullable=false)
-	public Integer getConsignorBpartnerID() {
-		return consignorBpartnerID;
+	public Integer getConsignorBPartnerID() {
+		return consignorBPartnerID;
 	}
 
-	public void setConsignorBpartnerID(Integer consignorBpartnerID) {
-		this.consignorBpartnerID = consignorBpartnerID;
+	public void setConsignorBPartnerID(Integer consignorBpartnerID) {
+		this.consignorBPartnerID = consignorBpartnerID;
 	}
 
 	@Basic

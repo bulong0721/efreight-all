@@ -18,7 +18,7 @@ public class CBPartner extends EntityBase {
 	private BigDecimal accoutBalance;
 	private Boolean active;
 	private String addr;
-	private Integer cBpartnerID;
+	private Integer cBPartnerID;
 	private Integer cCityID;
 	private Boolean consignee;
 	private Boolean consignor;
@@ -47,7 +47,7 @@ public class CBPartner extends EntityBase {
 	}
 
 	public CBPartner(Integer cBpartnerID) {
-		this.cBpartnerID = cBpartnerID;
+		this.cBPartnerID = cBpartnerID;
 	}
 
 	@Basic
@@ -104,12 +104,12 @@ public class CBPartner extends EntityBase {
 	@Column(name="c_bpartner_id", columnDefinition="INT")
 	@TableGenerator(name = "PkGen_111", table = "ad_sequence", pkColumnName = "name", pkColumnValue = "C_BPartner", valueColumnName = "currentnextsys", allocationSize = 1 )
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "PkGen_111")
-	public Integer getCBpartnerID() {
-		return cBpartnerID;
+	public Integer getCBPartnerID() {
+		return cBPartnerID;
 	}
 
-	public void setCBpartnerID(Integer cBpartnerID) {
-		this.cBpartnerID = cBpartnerID;
+	public void setCBPartnerID(Integer cBpartnerID) {
+		this.cBPartnerID = cBpartnerID;
 	}
 
 	@Basic

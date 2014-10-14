@@ -6,7 +6,7 @@
   	<display-name>Archetype Created Web Application</display-name>
   
 	<listener>
-	  <listener-class>com.freight.inject.AcuityDwrGuiceListener</listener-class>
+	  <listener-class>com.freight.inject.DwrGuiceListener</listener-class>
 	</listener>
 	
 	<servlet>

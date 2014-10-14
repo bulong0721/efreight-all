@@ -84,7 +84,7 @@ public class CLocation extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="c_region_id", columnDefinition="INT", nullable=false)
+	@Column(name="c_region_id", columnDefinition="INT")
 	public Integer getCRegionID() {
 		return cRegionID;
 	}

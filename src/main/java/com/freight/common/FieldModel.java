@@ -17,7 +17,7 @@ public class FieldModel implements DwrSerializable {
     private Boolean           fieldOnly;
     private Boolean           identifier;
     private Boolean           mandatory;
-    private Boolean           parimayKey;
+    private Boolean           primaryKey;
     private Boolean           readonly;
     private Boolean           selection;
     private String            columnName;
@@ -134,12 +134,12 @@ public class FieldModel implements DwrSerializable {
         this.mandatory = mandatory;
     }
 
-    public Boolean getParimayKey() {
-        return parimayKey;
+    public Boolean getPrimaryKey() {
+        return primaryKey;
     }
 
-    public void setParimayKey(Boolean parimayKey) {
-        this.parimayKey = parimayKey;
+    public void setPrimaryKey(Boolean primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
     public Boolean getReadonly() {

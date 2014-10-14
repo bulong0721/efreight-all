@@ -41,7 +41,7 @@ public final class DTOUtil {
         model.setFieldOnly(entity.isFieldOnly());
         model.setIdentifier(entity.isIdentifier());
         model.setMandatory(entity.isMandatory());
-        model.setParimayKey(entity.isParimayKey());
+        model.setPrimaryKey(entity.isParimayKey());
         model.setReadonly(entity.isReadonly());
         model.setSelection(entity.isSelectionColumn());
         model.setColumnName(entity.getColumnName());
@@ -58,4 +58,34 @@ public final class DTOUtil {
         }
         return resultList;
     }
+
+	public static List<FieldModel> convert2FieldList(List<ADColumn> columns) {
+		 int size = null == columns ? 0 : columns.size();
+	        List<FieldModel> resultList = new ArrayList<FieldModel>(size);
+	        if (null != columns) {
+	            for (ADColumn fieldEntity : columns) {
+	                resultList.add(convertToField(fieldEntity));
+	            }
+	        }
+	        return resultList;
+	}
+
+	private static FieldModel convertToField(ADColumn entity) {
+		FieldModel model = new FieldModel();
+        model.setLabel(entity.getName());
+        model.setFieldName(entity.getPropertyName());
+        model.setDefaultValue(entity.getDefaultValue());
+        model.setValueMax(entity.getValueMax());
+        model.setValueMin(entity.getValueMin());
+        model.setVformat(entity.getVformat());
+        model.setSeqNo(entity.getSeqNo());
+        model.setRefType(entity.getADReferenceID());
+        model.setRefValueID(entity.getADReferenceValueID());
+        model.setIdentifier(entity.isIdentifier());
+        model.setMandatory(entity.isMandatory());
+        model.setPrimaryKey(entity.isParimayKey());
+        model.setSelection(entity.isSelectionColumn());
+        model.setColumnName(entity.getColumnName());
+        return model;
+	}
 }

@@ -192,6 +192,18 @@ var loginUser, imageSizeMap, orderAutoLoadTime, subCommissionBase, resourceUrl, 
 					leaf: true,
 					id: 110,
 					action: 'W'
+				},
+				{
+					text: '区域管理',
+					leaf: true,
+					id: 122,
+					action: 'W'
+				},
+				{
+					text: '地址管理',
+					leaf: true,
+					id: 116,
+					action: 'W'
 				}
 			]
 		},

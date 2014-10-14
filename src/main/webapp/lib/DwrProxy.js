@@ -53,20 +53,19 @@ Ext.define('Ext.ux.DwrProxy', {
 		request = this.buildRequest(operation, callback, scope);
 
 		if (operation.allowWrite()) {
-			request = writer.write(request);
+			var request = writer.write(request);
 		}
 
 		// creating param list that is going to be sent to Dwr.
 		// and adding the request.param as the first parameter
-		if (this.passDwrStoreParams) {
-			var dwrParams = [ request.params ];
-		} else if (operation.action !== 'read') {
+		if (operation.action !== 'read') {
 			if (Ext.isArray(request.jsonData)) {
-				var dwrParams = [ request.jsonData ];
+				var jsonData = request.jsonData;
 			} else
-				var dwrParams = [
-					[ request.jsonData ]
-				];
+				var jsonData = [ request.jsonData ];
+			var dwrParams = [Ext.JSON.encode(jsonData)];
+		} else if (this.passDwrStoreParams) {
+			var dwrParams = [ request.params ];
 		} else
 			var dwrParams = [];
 
@@ -106,10 +105,10 @@ Ext.define('Ext.ux.DwrProxy', {
 					me.dwrFunction.create.apply(null, dwrParams);
 					break;
 				case 'update':
-					me.dwrFunction.create.apply(null, dwrParams);
+					me.dwrFunction.update.apply(null, dwrParams);
 					break;
 				case 'destroy':
-					me.dwrFunction.delete.apply(null, dwrParams);
+					me.dwrFunction.destroy.apply(null, dwrParams);
 					break;
 				default:
 					me.processResponse(false, operation, request, 'operation "' + operation.action + '" not available', callback, scope);

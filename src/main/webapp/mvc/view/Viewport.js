@@ -144,7 +144,7 @@ Ext.define('MyApp.view.Viewport', {
 					}
 					panel = Ext.create("MyApp.view.ADWindowPanel", {
 						title: winModel.name,
-						fields: winModel.fields,
+						windowModel: winModel,
 						tableID: winModel.tableID,
 						id: "W_" + winModel.tableID,
 						tabConfig: {}

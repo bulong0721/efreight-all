@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 	<named-query name="queryFieldVByWindow">
-		<query>SELECT f FROM ADFieldV f WHERE f.aDTabID=:windowID</query>
+		<query>SELECT f FROM ADFieldV f WHERE f.aDTabID=:windowID ORDER BY f.seqNo</query>
 	</named-query>
 	<named-query name="queryWindowByID">
 		<query>SELECT w FROM ADWindow w WHERE w.aDTabID=:windowID</query>
 	</named-query>
 	<named-query name="queryAllRef">
 		<query>SELECT r FROM ADRefListV r</query>
+	</named-query>
+	<named-query name="queryColumnByTable">
+		<query>SELECT c FROM ADColumn c WHERE c.aDTableID=:tableID</query>
+	</named-query>
+	<named-query name="queryLookupColumnsByTable">
+		<query>SELECT c FROM ADColumn c WHERE c.aDTableID=:tableID AND c.identifier=true</query>
+	</named-query>
+	<named-query name="lookupClient">
+		<query>SELECT c FROM ADClient c WHERE c.name LIKE :filter</query>
+	</named-query>
+	<named-query name="lookupOrg">
+		<query>SELECT c FROM ADOrg c WHERE c.name LIKE :filter</query>
+	</named-query>
+	<named-query name="lookupConsignor">
+		<query>SELECT c FROM CBPartner c WHERE c.consignor=true AND (c.name LIKE :filter OR c.orgName LIKE :filter)</query>
+	</named-query>
+	<named-query name="lookupConsignee">
+		<query>SELECT c FROM CBPartner c WHERE c.consignee=true AND (c.name LIKE :filter OR c.orgName LIKE :filter)</query>
+	</named-query>
+	<named-query name="lookupUser">
+		<query>SELECT u FROM ADUser u WHERE u.name LIKE :filter</query>
+	</named-query>
+	<named-query name="lookupOrder">
+		<query>SELECT c FROM COrder c WHERE c.orderCd LIKE :filter</query>
 	</named-query>
 </entity-mappings>

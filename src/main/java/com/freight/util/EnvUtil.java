@@ -6,7 +6,7 @@ import java.util.Date;
 public final class EnvUtil {
 
     public static Integer getUser() {
-        return 0;
+        return 100;
     }
 
     static SimpleDateFormat fullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

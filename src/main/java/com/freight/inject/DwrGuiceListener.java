@@ -15,11 +15,11 @@ import com.freight.service.impl.OrderServiceImpl;
 import com.freight.service.impl.UserServiceImpl;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
-public class AcuityDwrGuiceListener extends DwrGuiceServletContextListener {
+public class DwrGuiceListener extends DwrGuiceServletContextListener {
 
     @Override
     protected void configure() {
-        install(new JpaPersistModule("acuity"));
+        install(new JpaPersistModule("freight"));
         bind(JpaInitializer.class).asEagerSingleton();
         bindConversion(DwrSerializable.class).to(EntityConverter.class);
         bindConversion(PageResult.class).to(EntityConverter.class);

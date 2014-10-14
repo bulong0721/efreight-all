@@ -1,187 +1,151 @@
 Ext.define('MyApp.view.MoveAssignment', {
 	extend: 'Ext.panel.Panel',
-	id: 'MoveAssignment',
 	closable: true,
 	title: '装车配载',
-	queryForm: null,
-	toolbar: null,
-	dataGrid: null,
-	pager: null,
-	store: null,
+	layout: 'border',
+//	border: 0,
+	moveForm: null,
+	inventoryGrid: null,
+	lineGrid: null,
 
-	getStore: function () {
+	createMoveForm: function () {
 		var me = this;
-		if (me.store == null) {
-			me.store = Ext.create('MyApp.store.UserStore', {
-				autoLoad: true,
-				listeners: {
-					beforeload: function (store, operation, eOpts) {
-						var queryForm = me.getQueryForm();
-						if (queryForm != null) {
-							Ext.apply(operation, {
-								params: {
-									'q': queryForm.getValues(true)
-								}
-							});
-						}
-					}
-				}
-			});
-		}
-		return me.store;
-	},
-
-	getToolbar: function () {
-		var me = this;
-		if (Ext.isEmpty(me.toolbar)) {
-			me.toolbar = Ext.widget('toolbar', {
-				dock: 'top',
-				items: [
-					{
-						xtype: 'button',
-						itemId: 'addButton',
-						text: '新增'
-					}
-				]
-			});
-		}
-		return me.toolbar;
-	},
-
-	getPager: function () {
-		var me = this;
-		if (me.pager == null) {
-			me.pager = Ext.widget('pagingtoolbar', {
-				store: me.getStore(),
-				dock: 'bottom',
-				displayInfo: true
-			});
-		}
-		return me.pager;
-	},
-
-	getDataGrid: function () {
-		var me = this;
-		if (Ext.isEmpty(me.dataGrid)) {
-			me.dataGrid = Ext.widget('gridpanel', {
-				header: false,
-				columnLines: true,
-				store: me.getStore(),
-				columns: [
-					{
-						xtype: 'rownumberer'
+		me.moveForm = Ext.widget('form', {
+			frame: true,
+			border:0,
+			items: [
+				{
+					xtype: 'fieldcontainer',
+					layout: 'hbox',
+					defaults: {
+						labelWidth: 65,
+						labelAlign: 'right'
 					},
-					{
-						dataIndex: 'cClientId',
-						flex: 2,
-						text: '客户公司'
-					},
-					{
-						dataIndex: 'cOrgId',
-						text: '单位（组织）',
-						flex: 1.5
-					},
-					{
-						dataIndex: 'name',
-						text: '用户名',
-						flex: 1.5
-					},
-					{
-						dataIndex: 'birthday',
-						flex: 1,
-						text: '生日'
-						// renderer : Ext.util.Format.dateRenderer('y-m-d')
-					},
-					{
-						dataIndex: 'cBpartnerId',
-						text: '业务伙伴',
-						flex: 1.5
-					},
-					{
-						dataIndex: 'phone',
-						flex: 1.5,
-						text: '电话'
-					},
-					{
-						dataIndex: 'mobile',
-						flex: 1.5,
-						align: 'center',
-						text: '手机'
-					},
-					{
-						xtype: 'booleancolumn',
-						dataIndex: 'active',
-						flex: 0.5,
-						trueText: '是',
-						falseText: '否',
-						text: '激活'
-					}
-				],
-				dockedItems: [ me.getToolbar(), me.getPager() ],
-				selModel: Ext.create('Ext.selection.CheckboxModel', {
-					allowDeselect: true,
-					mode: 'SINGLE'
-				})
-			});
-		}
-		return me.dataGrid;
-	},
-
-	getQueryForm: function () {
-		var me = this;
-		if (me.queryForm == null) {
-			me.queryForm = Ext.widget('form', {
-				layout: 'column',
-				defaults: {
-					margin: '4 0 4 0',
-					columnWidth: .2,
-					labelWidth: 65,
-					labelAlign: 'right',
-					xtype: 'textfield'
+					items: [
+						{ name: 'dateOrdered', xtype: 'datefield', value: new Date(), format: 'Y/m/d', flex: 1, fieldLabel: '协议日期'},
+						{ name: 'orderCd', xtype: 'lookuptable', refValueID: 130, allowBlank: false, flex: 1, labelStyle: 'font-weight:bold;', fieldLabel: '协议编号'},
+						{ name: 'datePromise', xtype: 'lookuptable', flex: 1, refValueID: 101, fieldLabel: '起点站' },
+						{ name: 'orderedOrgID', xtype: 'lookuptable', allowBlank: false, flex: 1, refValueID: 101, fieldLabel: '起始站' },
+						{ name: 'destinationOrgID', xtype: 'numberfield', flex: 1, fieldLabel: '货物总价' },
+						{ name: 'consignorOrg', xtype: 'numberfield', tabIndex: -1, flex: 1, fieldLabel: '运输费用' }
+					]
 				},
-				items: [
-					{
-						name: 'cClientId',
-						fieldLabel: '公司名称'
+				{
+					xtype: 'fieldcontainer',
+					layout: 'hbox',
+					defaults: {
+						labelWidth: 65,
+						labelAlign: 'right'
 					},
-					{
-						name: 'cOrgId',
-						fieldLabel: '部门'
+					items: [
+						{ name: 'consignorBPartnerID', xtype: 'lookuptable', allowBlank: false, flex: 1, refValueID: 110, fieldLabel: '车牌号码' },
+						{ name: 'consigneeAddr', xtype: 'lookuplist', fieldName: 'payMethod', tabIndex: -1, flex: 1, fieldLabel: '车辆性质' },
+						{ name: 'consigneeAddr', xtype: 'lookuplist', fieldName: 'payMethod', tabIndex: -1, flex: 1, fieldLabel: '车辆型号' },
+						{ name: 'consigneeMobile', xtype: 'textfield', tabIndex: -1, flex: 1, readOnly: true, fieldLabel: '行驶证号' },
+						{ name: 'consigneeOrg', xtype: 'numberfield', tabIndex: -1, flex: 1, fieldLabel: '总件数' },
+						{ name: 'consigneeBPartnerID', xtype: 'numberfield', allowBlank: false, flex: 1, fieldLabel: '预付'}
+					]
+				},
+				{
+					xtype: 'fieldcontainer',
+					layout: 'hbox',
+					defaults: {
+						labelWidth: 65,
+						labelAlign: 'right'
 					},
-					{
-						name: 'name',
-						fieldLabel: '用户名'
+					items: [
+						{ name: 'consignorBPartnerID', xtype: 'lookuptable', allowBlank: false, flex: 1, refValueID: 110, fieldLabel: '司机' },
+						{ name: 'consignorMobile', xtype: 'textfield', tabIndex: -1, flex: 1, readOnly: true, fieldLabel: '司机电话' },
+						{ name: 'consignorAddr', xtype: 'textfield', tabIndex: -1, flex: 1, readOnly: true, fieldLabel: '司机身份证' },
+						{ name: 'consignorAddr', xtype: 'textfield', tabIndex: -1, flex: 1, readOnly: true, fieldLabel: '驾驶证号' },
+						{ name: 'totalWeight', xtype: 'numberfield', minValue: 0, value: 0, flex: 1, fieldLabel: '总重量' },
+						{ name: 'totalVolume', xtype: 'numberfield', minValue: 0, value: 0, flex: 1, fieldLabel: '到付' }
+					]
+				},
+				{
+					xtype: 'fieldcontainer',
+					layout: 'hbox',
+					defaults: {
+						labelWidth: 65,
+						labelAlign: 'right'
 					},
-					{
-						name: 'mobile',
-						fieldLabel: '手机'
-					}
-				],
-				buttons: [
-					{
-						text: '重置',
-						handler: function () {
-							me.getQueryForm().getForm().reset();
-						}
-					},
-					'->',
-					{
-						text: '查询',
-						handler: function () {
-							me.getPager().moveFirst();
-						}
-					}
-				]
-			});
-		}
-		return this.queryForm;
+					items: [
+						{ name: 'consigneePhone', xtype: 'textfield', tabIndex: -1, flex: 1, readOnly: true, fieldLabel: '车主' },
+						{ name: 'consigneeMobile', xtype: 'textfield', tabIndex: -1, flex: 1, readOnly: true, fieldLabel: '车主电话' },
+						{ name: 'consigneeAddr', xtype: 'textfield', tabIndex: -1, flex: 2, readOnly: true, fieldLabel: '车主地址' },
+						{ name: 'paidConsignee', xtype: 'numberfield', minValue: 0, value: 0, flex: 1, fieldLabel: '总体积' },
+						{ name: 'paidReceipt', xtype: 'numberfield', minValue: 0, value: 0, flex: 1, fieldLabel: '回付' }
+					]
+				}
+			],
+			buttons: [
+				{text: '查询库存'},
+				{text: '保存配载'}
+			]
+		});
+	},
+
+	createInventoryGrid: function () {
+		var me = this;
+		me.inventoryGrid = Ext.widget('gridpanel', {
+			columns: [],
+//			border: 0,
+			dockedItems: [
+				{
+					xtype: 'toolbar',
+					dock: 'top',
+					items: [
+						{ text: '添加装车'}
+					]
+				},
+				{
+					xtype: 'pagingtoolbar',
+					dock: 'bottom',
+					displayInfo: true
+				}
+			],
+			selType: 'checkboxmodel'
+		});
+	},
+
+	createLineGrid: function () {
+		var me = this;
+		me.lineGrid = Ext.widget('gridpanel', {
+			columns: [],
+			header: false,
+//			border: 0,
+			dockedItems: [
+				{
+					xtype: 'toolbar',
+					dock: 'top',
+					items: [
+						{ text: '移除装车'}
+					]
+				},
+				{
+					xtype: 'pagingtoolbar',
+					dock: 'bottom',
+					displayInfo: true
+				}
+			],
+			selType: 'checkboxmodel'
+		});
 	},
 
 	initComponent: function () {
 		var me = this;
+		me.createMoveForm();
+		me.createInventoryGrid();
+		me.createLineGrid();
+
 		Ext.applyIf(me, {
-			items: [ me.getQueryForm(), me.getDataGrid() ]
+			items: [
+				{ border: 0, region: 'north', layout: 'fit', items: [me.moveForm] },
+				{ border: 0, region: 'west', split:true, flex: 2, layout: 'fit', items: [me.inventoryGrid] },
+				{ border: 0, region: 'center', flex: 1.5, layout: 'fit', items: [me.lineGrid] }
+			]
 		});
 		me.callParent(arguments);
 	}
+
 });

@@ -9,19 +9,24 @@ import com.freight.model.COrder;
 
 public interface FacadeService {
 
-    PageResult<COrder> searchOrder(Map<String, String> paramMap);
+	PageResult<COrder> searchOrder(Map<String, String> paramMap);
 
-    PageResult<ADUser> searchUser(Map<String, String> paramMap);
+	PageResult<ADUser> searchUser(Map<String, String> paramMap);
 
-    WindowModel getWindowModel(int tabID);
-    
-    Map<String, List<LookupModel>> getAllRefList();
-    
-    PageResult<?> search4Window(Map<String, String> paramMap, Integer tableID);
-    
-    boolean create4Window(List<?> entityList, int tableID);
-    
-    boolean update4Window(List<?> entityList, int tableID);
-    
-    boolean delete4Window(List<?> entityList, int tableID);
+	WindowModel getWindowModel(int windowID);
+
+	Map<String, List<LookupModel>> getAllRefList();
+
+	PageResult<?> search4Window(Map<String, String> paramMap, Integer tableID);
+
+	boolean create4Window(String entityText, int tableID);
+
+	boolean update4Window(String entityText, int tableID);
+
+	boolean delete4Window(String entityText, int tableID);
+
+	PageResult<?> lookup4Table(Map<String, String> paramMap, Integer refValueID);
+
+	boolean saveOrder(String entityText);
+
 }

@@ -2,255 +2,138 @@
  * Created by Administrator on 2014-09-03.
  */
 /*
- *抽象View
+ *WindowPanel
  */
 Ext.define('MyApp.view.ADWindowPanel', {
 	extend: 'Ext.panel.Panel',
 	closable: true,
 	layout: 'border',
-	fields: [],
-	toolItems: [],
-
+	windowModel: null,
+	modelClass: null,
+	toolbar: null,
+	pager: null,
+	dataGrid: null,
+	queryForm: null,
 	store: null,
-	getStore: function () {
+	defineModel: function (modelFields, keyField) {
 		var me = this;
-		if (me.store == null) {
-			me.store = Ext.create('Ext.data.Store', {
-				model: 'Ext.data.Model',
-				autoDestroy: true,
-				fields: me.getModelFields(),
-				proxy: {
-					type: 'dwr',
-					passDwrStoreParams: true,
-					dwrFunction: {
-						read: facade.search4Window,
-						create: facade.create4Window,
-						update: facade.update4Window,
-						destroy: facade.delete4Window
-					},
-					dwrParams: [me.tableID],
-					reader: {
-						type: 'json',
-						root: 'rows',
-						totalProperty: 'total'
+		Ext.define(me.modelClass, {
+			extend: 'Ext.data.Model',
+			idProperty: keyField,
+			fields: modelFields,
+			proxy: {
+				type: 'dwr',
+				passDwrStoreParams: true,
+				dwrFunction: {
+					read: facade.search4Window,
+					create: facade.create4Window,
+					update: facade.update4Window,
+					destroy: facade.delete4Window
+				},
+				dwrParams: [me.tableID],
+				reader: {
+					type: 'json',
+					root: 'rows',
+					totalProperty: 'total'
+				}
+			}
+		});
+	},
+	createStore: function () {
+		var me = this;
+		me.store = Ext.create('Ext.data.Store', {
+			model: me.modelClass,
+			autoDestroy: true,
+			autoLoad: false,
+			listeners: {
+				beforeload: function (store, operation, eOpts) {
+					var queryForm = me.queryForm;
+					if (queryForm != null) {
+						Ext.apply(operation, {
+							params: {
+								'q': queryForm.getValues(true)
+							}
+						});
+					}
+				}
+			}
+		});
+	},
+	createModel: function () {
+		var me = this;
+		var record = Ext.create(me.modelClass);
+		me.store.add(record);
+	},
+	updateModel: function () {
+		var me = this;
+		me.store.sync();
+	},
+	deleteModel: function () {
+		var me = this;
+		var selRecords = me.dataGrid.getSelectionModel().getSelection();
+		Ext.Array.each(selRecords, function (record) {
+			me.store.remove(record);
+		});
+		me.store.sync();
+	},
+	createToolbar: function () {
+		var me = this;
+		me.toolbar = Ext.widget('toolbar', {
+			dock: 'top',
+			items: [
+				{
+					xtype: 'button',
+					iconCls: 'x-tree-icon-leaf',
+					itemId: 'addButton',
+					text: '新增',
+					listeners: {
+						click: { fn: me.createModel, scope: me }
 					}
 				},
-				autoLoad: false,
-				listeners: {
-					beforeload: function (store, operation, eOpts) {
-						var queryForm = me.getQueryForm();
-						if (queryForm != null) {
-							Ext.apply(operation, {
-								params: {
-									'q': queryForm.getValues(true)
-								}
-							});
-						}
+				{
+					xtype: 'button',
+					itemId: 'updateButton',
+					text: '保存',
+					listeners: {
+						click: { fn: me.updateModel, scope: me }
+					}
+				},
+				{
+					xtype: 'button',
+					itemId: 'deleteButton',
+					text: '删除',
+					listeners: {
+						click: { fn: me.deleteModel, scope: me }
 					}
 				}
-			});
-		}
-		return me.store;
+			]
+		});
 	},
-	addModel: function () {
-	},
-	getToolItems: function () {
-
-	},
-	toolbar: null,
-	getToolbar: function () {
+	createPager: function () {
 		var me = this;
-		if (Ext.isEmpty(me.toolbar)) {
-			me.toolbar = Ext.widget('toolbar', {
-				dock: 'top',
-				items: [
-					{
-						xtype: 'button',
-						iconCls: 'x-tree-icon-leaf',
-						itemId: 'addButton',
-						text: '新增',
-						listeners: {
-							click: {
-								fn: me.addModel,
-								scope: me
-							}
-						}
-					},
-					{
-						xtype: 'button',
-						itemId: 'updateButton',
-						text: '修改'
-					},
-					{
-						xtype: 'button',
-						itemId: 'deleteButton',
-						text: '删除'
-					}
-				]
-			});
-		}
-		return me.toolbar;
+		me.pager = Ext.widget('pagingtoolbar', {
+			store: me.store,
+			dock: 'bottom',
+			displayInfo: true
+		});
 	},
-	pager: null,
-	getPager: function () {
+	createDataGrid: function (columns) {
 		var me = this;
-		if (me.pager == null) {
-			me.pager = Ext.widget('pagingtoolbar', {
-				store: me.getStore(),
-				dock: 'bottom',
-				displayInfo: true
-			});
-		}
-		return me.pager;
-	},
-	modelFields: null,
-	getModelFields: function () {
-		var me = this;
-		if (null == me.modelFields) {
-			me.modelFields = [];
-			Ext.Array.each(me.fields, function (field) {
-				var q = {};
-				if (!field.fieldOnly) {
-					q.name = field.fieldName;
-					if (15 == field.refType || 16 == field.refType || 24 == field.refType) {
-						q.type = 'date';
-					} else if (22 == field.refType) {
-						q.type = 'float';
-					} else if (11 == field.refType) {
-						q.type = 'int';
-					} else if (20 == field.refType) {
-						q.type = 'boolean';
-					}
-					if (field.primaryKey) {
-						q.name = 'id';
-						q.mapping = field.field;
-					}
-					Ext.Array.push(me.modelFields, q);
-				}
-			});
-		}
-		return this.modelFields;
-	},
-	queryFields: null,
-	getQueryFields: function () {
-		var me = this;
-		if (null == me.queryFields) {
-			me.queryFields = [];
-			var sortedFields = Ext.Array.sort(me.fields, function (lhs, rhs) {
-				return lhs.seqNo - rhs.seqNo;
-			});
-			Ext.Array.each(sortedFields, function (field) {
-				if (field.selection) {
-					var lookupCfg = {labelWidth: 65,
-						labelAlign: 'right' };
-					var q = {};
-					q.fieldLabel = field.label;
-					q.name = field.fieldName;
-					if (15 == field.refType || 16 == field.refType || 24 == field.refType) {
-						q.xtype = 'datefield';
-					} else if (22 == field.refType) {
-						q.xtype = 'numberfield';
-					} else if (11 == field.refType) {
-						q.xtype = 'numberfield';
-					} else if (20 == field.refType) {
-						q.xtype = 'checkboxfield';
-					} else if (17 == field.refType) {
-						q = Lookup.createLookupList(field, lookupCfg);
-					} else if (18 == field.refType) {
-						q.xtype = 'pickerfield';
-					} else if (36 == field.refType) {
-						q.xtype = 'textareafield';
-					}
-					Ext.Array.push(me.queryFields, q);
-				}
-			});
-		}
-		return this.queryFields;
-	},
-	gridColumns: null,
-	getGridColumns: function () {
-		var me = this;
-		if (null == me.gridColumns) {
-			me.gridColumns = [];
-			var sortedFields = Ext.Array.sort(me.fields, function (lhs, rhs) {
-				return lhs.seqNo - rhs.seqNo;
-			});
-			Ext.Array.each(sortedFields, function (field) {
-				if (field.displayed) {
-					var q = {};
-					q.text = field.label;
-					q.dataIndex = field.fieldName;
-					if (!field.readonly) {
-						if (15 == field.refType || 16 == field.refType || 24 == field.refType) {
-							q.editor = {xtype: 'datefield', format: 'Y/m/d' };
-							q.xtype = 'datecolumn';
-						} else if (22 == field.refType) {
-							q.editor = {xtype: 'numberfield'};
-							q.xtype = 'numbercolumn';
-						} else if (11 == field.refType) {
-							q.editor = {xtype: 'numberfield'};
-							//q.xtype = 'numbercolumn';
-						} else if (20 == field.refType) {
-							q.editor = {xtype: 'checkboxfield'};
-							q.xtype = 'checkcolumn';
-						} else if (17 == field.refType) {
-							q.editor = Lookup.createLookupList(field);
-						} else if (18 == field.refType) {
-							q.editor = {xtype: 'pickerfield'};
-						} else if (36 == field.refType) {
-							q.editor = {xtype: 'textareafield'};
-						} else {
-							q.editor = {xtype: 'textfield'};
-						}
-					}
-					var width = field.displayLength * 5;
-					if (11 == field.refType || 22 == field.refType) {
-						width = 90;
-					}
-					if (field.label.length * 5 > width) {
-						width = field.label.length * 5;
-					}
-					if (width > 300) {
-						width = 300;
-					} else if (width < 65) {
-						width = 65;
-					}
-					if ((17 == field.refType || 18 == field.refType) && width < 125) {
-						width = 125;
-					}
-					q.width = width;
-					Ext.Array.push(me.gridColumns, q);
-				}
-			});
-		}
-		return this.gridColumns;
-	},
-	dataGrid: null,
-	getDataGrid: function () {
-		var me = this;
-		if (Ext.isEmpty(me.dataGrid)) {
-			me.dataGrid = Ext.widget('gridpanel', {
-				header: false,
-				columnLines: true,
-				store: me.getStore(),
-				columns: me.getGridColumns(),
-				plugins: [
-					Ext.create('Ext.grid.plugin.RowEditing', {
-						clicksToEdit: 1,
-						autoCancel: false
-					})
-				],
-				dockedItems: [ me.getToolbar(), me.getPager() ],
-				selModel: Ext.create('Ext.selection.CheckboxModel', {
-					allowDeselect: true,
-					mode: 'SINGLE'
+		me.dataGrid = Ext.widget('gridpanel', {
+			header: false,
+			columnLines: true,
+			store: me.store,
+			columns: columns,
+			plugins: [
+				Ext.create('Ext.grid.plugin.CellEditing', {
+					clicksToEdit: 1
 				})
-			});
-		}
-		return me.dataGrid;
+			],
+			dockedItems: [ me.toolbar, me.pager ],
+			selType: 'checkboxmodel'
+		});
 	},
-	queryForm: null,
-	getQueryForm: function () {
+	createQueryForm: function (fields) {
 		var me = this;
 		if (me.queryForm == null) {
 			me.queryForm = Ext.widget('form', {
@@ -262,45 +145,89 @@ Ext.define('MyApp.view.ADWindowPanel', {
 					labelAlign: 'right',
 					xtype: 'textfield'
 				},
-				items: me.getQueryFields(),
+				items: fields,
 				buttons: [
 					{
 						text: '重置',
 						handler: function () {
-							me.getQueryForm().getForm().reset();
+							me.queryForm.getForm().reset();
 						}
 					},
 					'->',
 					{
 						text: '查询',
 						handler: function () {
-							me.getPager().moveFirst();
+							me.pager.moveFirst();
 						}
 					}
 				]
 			});
 		}
-		return this.queryForm;
 	},
-
 	initComponent: function () {
-		var me = this;
+		var me = this, columns = [], queryFields = [], modelFields = [], keyField;
+		Ext.Array.each(me.windowModel.fields, function (field) {
+			var column, queryField, modelField;
+			var columnCfg, editorCfg, modelFieldCfg;
+			if (15 == field.refType || 16 == field.refType || 24 == field.refType) {
+				editorCfg = {xtype: 'datefield', format: 'Y/m/d' };
+				columnCfg = {xtype: 'datecolumn', width: 90};
+				modelFieldCfg = {type: 'date'};
+			} else if (22 == field.refType) {
+				editorCfg = {xtype: 'numberfield'};
+				columnCfg = {xtype: 'numbercolumn', width: 90};
+				modelFieldCfg = {type: 'float'};
+			} else if (11 == field.refType) {
+				editorCfg = {xtype: 'numberfield'};
+				columnCfg = {width: 90};
+				modelFieldCfg = {type: 'int'};
+			} else if (17 == field.refType) {
+				editorCfg = {xtype: 'lookuplist', fieldName: field.fieldName};
+				columnCfg = {width: 120};
+			} else if (18 == field.refType) {
+				editorCfg = {xtype: 'lookuptable', refValueID: field.refValueID};
+				columnCfg = {width: 120};
+			} else if (20 == field.refType) {
+				editorCfg = {xtype: 'checkboxfield'};
+				columnCfg = {xtype: 'checkcolumn', width: 65};
+				modelFieldCfg = {type: 'boolean'};
+			} else if (36 == field.refType) {
+				editorCfg = {xtype: 'textareafield'};
+				columnCfg = {width: 200};
+			} else {
+				editorCfg = {xtype: 'textfield'};
+				columnCfg = {width: 75};
+			}
+			if (field.primaryKey) {
+				keyField = field.fieldName;
+			}
+			if (field.displayed) {//Grid Column
+				column = Ext.apply({text: field.label, dataIndex: field.fieldName}, columnCfg);
+				if (!field.readonly) {//Cell Editor
+					column.editor = editorCfg;
+				}
+				Ext.Array.push(columns, column);
+			}
+			if (field.selection) {//Query Form Field
+				queryField = {fieldLabel: field.label, name: field.fieldName};
+				Ext.Array.push(queryFields, Ext.apply(queryField, editorCfg));
+			}
+			if (!field.fieldOnly) {//Model Field
+				modelField = {name: field.fieldName};
+				Ext.Array.push(modelFields, Ext.apply(modelField, modelFieldCfg));
+			}
+		});
+		me.modelClass = "MyApp.model.Model" + me.windowModel.tableID;
+		me.defineModel(modelFields, keyField);
+		me.createStore();
+		me.createQueryForm(queryFields);
+		me.createToolbar();
+		me.createPager();
+		me.createDataGrid(columns);
 		Ext.applyIf(me, {
 			items: [
-				{
-					xtype: 'panel',
-					region: 'north',
-					layout: 'fit',
-					itemId: 'headerPanel',
-					items: [me.getQueryForm()]
-				},
-				{
-					xtype: 'panel',
-					region: 'center',
-					itemId: 'centerPanel',
-					layout: 'fit',
-					items: [me.getDataGrid()]
-				}
+				{ xtype: 'panel', region: 'north', layout: 'fit', itemId: 'headerPanel', items: [me.queryForm] },
+				{ xtype: 'panel', region: 'center', itemId: 'centerPanel', layout: 'fit', items: [me.dataGrid] }
 			]
 		});
 		me.callParent(arguments);
