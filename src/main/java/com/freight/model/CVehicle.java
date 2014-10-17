@@ -35,7 +35,7 @@ public class CVehicle extends EntityBase {
 	private BigDecimal mileageCurrent;
 	private BigDecimal mileageStart;
 	private BigDecimal mileageTerminal;
-	private Integer modelType;
+	private Integer vehicleNature;
 	private String name;
 	private BigDecimal oilConsumption;
 	private String operationNo;
@@ -276,13 +276,13 @@ public class CVehicle extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="model_type", columnDefinition="INT")
-	public Integer getModelType() {
-		return modelType;
+	@Column(name="vehicle_nature", columnDefinition="INT")
+	public Integer getVehicleNature() {
+		return vehicleNature;
 	}
 
-	public void setModelType(Integer modelType) {
-		this.modelType = modelType;
+	public void setVehicleNature(Integer modelType) {
+		this.vehicleNature = modelType;
 	}
 
 	@Basic

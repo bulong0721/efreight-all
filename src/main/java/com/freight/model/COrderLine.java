@@ -16,7 +16,7 @@ public class COrderLine extends EntityBase {
 	private Integer aDClientID;
 	private Integer aDOrgID;
 	private Boolean active;
-	private BigDecimal amount;
+	private Integer amount;
 	private Integer cOrderID;
 	private Integer cOrderLineID;
 	private String created;
@@ -28,6 +28,7 @@ public class COrderLine extends EntityBase {
 	private Integer updatedBy;
 	private BigDecimal volume;
 	private BigDecimal weight;
+	private BigDecimal value;
 
 	public COrderLine() {
 	}
@@ -68,11 +69,11 @@ public class COrderLine extends EntityBase {
 
 	@Basic
 	@Column(nullable=false)
-	public BigDecimal getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
 
@@ -119,7 +120,7 @@ public class COrderLine extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="line_no", columnDefinition="INT", nullable=false)
+	@Column(name="line_no", columnDefinition="INT")
 	public Integer getLineNo() {
 		return lineNo;
 	}
@@ -186,4 +187,16 @@ public class COrderLine extends EntityBase {
 	public void setWeight(BigDecimal weight) {
 		this.weight = weight;
 	}
+
+	@Basic
+	@Column(nullable=false)
+	public BigDecimal getValue() {
+		return value;
+	}
+
+	public void setValue(BigDecimal value) {
+		this.value = value;
+	}
+	
+	
 }

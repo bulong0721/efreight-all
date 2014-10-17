@@ -29,4 +29,14 @@ public interface FacadeService {
 
 	boolean saveOrder(String entityText);
 
+	int saveMove(String entityText);
+
+	PageResult<?> searchInventory(Map<String, String> paramMap);
+
+	PageResult<?> searchMoveline(Map<String, String> paramMap);
+
+	void deleteMoveline(String entityText);
+
+	void createMoveline(String entityText);
+
 }

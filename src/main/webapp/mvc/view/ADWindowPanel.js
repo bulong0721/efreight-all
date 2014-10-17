@@ -77,10 +77,9 @@ Ext.define('MyApp.view.ADWindowPanel', {
 		me.store.sync();
 	},
 	createToolbar: function () {
-		var me = this;
-		me.toolbar = Ext.widget('toolbar', {
-			dock: 'top',
-			items: [
+		var me = this, actions = [];
+		if (me.windowModel.infoTab) {
+			actions = [
 				{
 					xtype: 'button',
 					iconCls: 'x-tree-icon-leaf',
@@ -106,7 +105,11 @@ Ext.define('MyApp.view.ADWindowPanel', {
 						click: { fn: me.deleteModel, scope: me }
 					}
 				}
-			]
+			];
+		}
+		me.toolbar = Ext.widget('toolbar', {
+			dock: 'top',
+			items: actions
 		});
 	},
 	createPager: function () {
@@ -183,7 +186,7 @@ Ext.define('MyApp.view.ADWindowPanel', {
 				modelFieldCfg = {type: 'int'};
 			} else if (17 == field.refType) {
 				editorCfg = {xtype: 'lookuplist', fieldName: field.fieldName};
-				columnCfg = {width: 120};
+				columnCfg = {xtype: 'listcolumn', fieldName: field.fieldName, width: 120};
 			} else if (18 == field.refType) {
 				editorCfg = {xtype: 'lookuptable', refValueID: field.refValueID};
 				columnCfg = {width: 120};
@@ -226,8 +229,8 @@ Ext.define('MyApp.view.ADWindowPanel', {
 		me.createDataGrid(columns);
 		Ext.applyIf(me, {
 			items: [
-				{ xtype: 'panel', region: 'north', layout: 'fit', itemId: 'headerPanel', items: [me.queryForm] },
-				{ xtype: 'panel', region: 'center', itemId: 'centerPanel', layout: 'fit', items: [me.dataGrid] }
+				{ border: 0, region: 'north', layout: 'fit', itemId: 'headerPanel', items: [me.queryForm] },
+				{ border: 0, region: 'center', itemId: 'centerPanel', layout: 'fit', items: [me.dataGrid] }
 			]
 		});
 		me.callParent(arguments);

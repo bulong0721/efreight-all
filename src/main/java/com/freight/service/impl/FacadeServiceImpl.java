@@ -1,14 +1,36 @@
 package com.freight.service.impl;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.freight.common.*;
-import com.freight.model.*;
-import com.freight.service.*;
+import com.freight.common.LookupModel;
+import com.freight.common.LookupTable;
+import com.freight.common.PageResult;
+import com.freight.common.WindowModel;
+import com.freight.model.ADClient;
+import com.freight.model.ADColumn;
+import com.freight.model.ADField;
+import com.freight.model.ADFieldV;
+import com.freight.model.ADOrg;
+import com.freight.model.ADRefListV;
+import com.freight.model.ADRefTable;
+import com.freight.model.ADUser;
+import com.freight.model.ADWindow;
+import com.freight.model.CBPartner;
+import com.freight.model.CInout;
+import com.freight.model.CInventory;
+import com.freight.model.CInventoryV;
+import com.freight.model.CMove;
+import com.freight.model.CMoveLine;
+import com.freight.model.COrder;
+import com.freight.model.COrderLine;
+import com.freight.model.CVehicle;
+import com.freight.service.AbstractService;
+import com.freight.service.FacadeService;
+import com.freight.service.OrderService;
+import com.freight.service.UserService;
 import com.freight.util.DTOUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -50,10 +72,8 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 	@Override
 	public WindowModel getWindowModel(int windowID) {
 		Map<String, Object> paramMap = toMap("windowID", windowID);
-		ADWindow window = selectOneByNamedQuery("queryWindowByID",
-				ADWindow.class, paramMap);
-		List<ADFieldV> fieldList = selectListByNamedQuery(
-				"queryFieldVByWindow", ADFieldV.class, paramMap);
+		ADWindow window = selectOneByNamedQuery("queryWindowByID", ADWindow.class, paramMap);
+		List<ADFieldV> fieldList = selectListByNamedQuery("queryFieldVByWindow", ADFieldV.class, paramMap);
 		return DTOUtil.toWindowModel(window, fieldList);
 	}
 
@@ -138,12 +158,67 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 	@Transactional
 	public boolean saveOrder(String entityText) {
 		COrder order = JSON.parseObject(entityText, COrder.class);
-		if (null == order.getCOrderID()) {
-			persistAll(Arrays.asList(order));
+		Integer orderID = order.getCOrderID();
+		initEntity(order);
+		if (null == orderID) {
+			em.persist(order);
+			em.flush();
 		} else {
-			mergeAll(Arrays.asList(order));
+			em.merge(order);
 		}
+		orderID = order.getCOrderID();
+		COrderLine orderLine = JSON.parseObject(entityText, COrderLine.class);
+		orderLine.setCOrderID(orderID);
+		orderLine.setLineNo(1);
+		initEntity(orderLine);
+		em.merge(orderLine);
 		return false;
+	}
+
+	@Override
+	@Transactional
+	public int saveMove(String entityText) {
+		CMove cMove = JSON.parseObject(entityText, CMove.class);
+		initEntity(cMove);
+		CMove mergeMove = em.merge(cMove);
+		em.flush();
+		return mergeMove.getCMoveID();
+	}
+
+	@Override
+	public PageResult<?> searchInventory(Map<String, String> paramMap) {
+		int offset = Integer.parseInt(paramMap.get(PARAM_START)); 
+		int limit = Integer.parseInt(paramMap.get(PARAM_LIMIT)); 
+		Integer departOrgID = Integer.parseInt(paramMap.get("departOrgID"));
+		Integer destOrgID = Integer.parseInt(paramMap.get("destOrgID"));
+		Map<String, Object> queryMap = toMap("ownerOrgID", departOrgID);
+		queryMap.put("destOrgID", destOrgID);
+		List<?> rows = selectListByNamedQuery("queryInventory", CInventoryV.class, queryMap, offset, limit);
+		return new PageResult<>(rows, rows.size());
+	}
+
+	@Override
+	public PageResult<?> searchMoveline(Map<String, String> paramMap) {
+		int offset = Integer.parseInt(paramMap.get(PARAM_START));
+		int limit = Integer.parseInt(paramMap.get(PARAM_LIMIT));
+		Integer moveID = Integer.parseInt(paramMap.get("moveID"));
+		Map<String, Object> queryMap = toMap("moveID", moveID);
+		List<?> rows = selectListByNamedQuery("queryMoveline", CInventoryV.class, queryMap, offset, limit);
+		return new PageResult<>(rows, rows.size());
+	}
+
+	@Override
+	@Transactional
+	public void deleteMoveline(String entityText) {
+		List<?> entityList = JSON.parseArray(entityText, CMoveLine.class);
+		removeAll(entityList);
+	}
+
+	@Override
+	@Transactional
+	public void createMoveline(String entityText) {
+		List<?> entityList = JSON.parseArray(entityText, CMoveLine.class);
+		persistAll(entityList);
 	}
 
 }

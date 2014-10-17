@@ -16,7 +16,7 @@ public class CMove extends EntityBase {
 	private Integer aDClientID;
 	private Integer aDOrgID;
 	private Boolean active;
-	private String cMoveID;
+	private Integer cMoveID;
 	private Integer cOrderID;
 	private Integer cVehicleID;
 	private String contractNo;
@@ -31,7 +31,7 @@ public class CMove extends EntityBase {
 	private String timeArrived;
 	private String timeDeparted;
 	private BigDecimal totalAmount;
-	private BigDecimal totalCharge;
+	private BigDecimal totalFreight;
 	private BigDecimal totalVolume;
 	private BigDecimal totalWeight;
 	private String updated;
@@ -40,7 +40,7 @@ public class CMove extends EntityBase {
 	public CMove() {
 	}
 
-	public CMove(String cMoveID) {
+	public CMove(Integer cMoveID) {
 		this.cMoveID = cMoveID;
 	}
 
@@ -78,11 +78,11 @@ public class CMove extends EntityBase {
 	@Column(name="c_move_id", length=20)
 	@TableGenerator(name = "PkGen_118", table = "ad_sequence", pkColumnName = "name", pkColumnValue = "C_Move", valueColumnName = "currentnextsys", allocationSize = 1 )
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "PkGen_118")
-	public String getCMoveID() {
+	public Integer getCMoveID() {
 		return cMoveID;
 	}
 
-	public void setCMoveID(String cMoveID) {
+	public void setCMoveID(Integer cMoveID) {
 		this.cMoveID = cMoveID;
 	}
 
@@ -137,7 +137,7 @@ public class CMove extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="date_promise", nullable=false)
+	@Column(name="date_promise")
 	public String getDatePromise() {
 		return datePromise;
 	}
@@ -167,7 +167,7 @@ public class CMove extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="driver_user_id", columnDefinition="INT", nullable=false)
+	@Column(name="driver_user_id", columnDefinition="INT")
 	public Integer getDriverUserID() {
 		return driverUserID;
 	}
@@ -227,13 +227,13 @@ public class CMove extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="total_charge", nullable=false)
-	public BigDecimal getTotalCharge() {
-		return totalCharge;
+	@Column(name="total_freight", nullable=false)
+	public BigDecimal getTotalFreight() {
+		return totalFreight;
 	}
 
-	public void setTotalCharge(BigDecimal totalCharge) {
-		this.totalCharge = totalCharge;
+	public void setTotalFreight(BigDecimal totalCharge) {
+		this.totalFreight = totalCharge;
 	}
 
 	@Basic

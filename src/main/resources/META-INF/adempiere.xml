@@ -35,4 +35,13 @@
 	<named-query name="lookupOrder">
 		<query>SELECT c FROM COrder c WHERE c.orderCd LIKE :filter</query>
 	</named-query>
+	<named-query name="lookupVehicle">
+		<query>SELECT c FROM CVehicle c WHERE c.plateNo LIKE :filter</query>
+	</named-query>
+	<named-query name="queryInventory">
+		<query>SELECT i FROM CInventoryV i WHERE i.inventoryStatus=0 AND i.ownerOrgID=:ownerOrgID AND i.destOrgID=:destOrgID</query>
+	</named-query>
+	<named-query name="queryMoveline">
+		<query>SELECT ml FROM CMoveLineV ml WHERE ml.cMoveID=:moveID</query>
+	</named-query>
 </entity-mappings>

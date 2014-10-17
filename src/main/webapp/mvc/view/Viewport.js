@@ -67,6 +67,7 @@ Ext.define('MyApp.view.Viewport', {
 					flex: 1,
 					title: '菜单列表',
 					xtype: 'treepanel',
+//					layout: 'accordion',
 					syncRowHeight: false,
 					store: me.getMenuStore(),
 					folderSort: false,

@@ -22,6 +22,7 @@ public final class DTOUtil {
         WindowModel model = new WindowModel();
         model.setName(entity.getName());
         model.setTableID(entity.getADTableID());
+        model.setInfoTab(entity.isInfoTab());
         return model;
     }
 

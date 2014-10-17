@@ -31,6 +31,9 @@
 		<class>com.freight.model.CWarehouse</class>
 		<class>com.freight.model.ADFieldV</class>
 		<class>com.freight.model.ADRefTable</class>
+		<class>com.freight.model.CInventoryV</class>
+		<class>com.freight.model.CMoveLineV</class>
+		<class>com.freight.model.COrderLineV</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/acuity" />
 			<property name="javax.persistence.jdbc.user" value="adempiere" />

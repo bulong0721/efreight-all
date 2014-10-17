@@ -25,7 +25,6 @@ public class COrder extends EntityBase {
 	private BigDecimal chargePackage;
 	private BigDecimal chargePickup;
 	private BigDecimal chargeStore;
-	private BigDecimal chargeTake;
 	private String clerkUserID;
 	private String comment;
 	private String commentReceipt;
@@ -57,11 +56,9 @@ public class COrder extends EntityBase {
 	private Integer receiptCopies;
 	private String salesrepUserID;
 	private Integer shipperBpartnerID;
-	private BigDecimal totalAmount;
-	private BigDecimal totalVolume;
-	private BigDecimal totalWeight;
 	private String updated;
 	private Integer updatedBy;
+	private BigDecimal totalCharge;
 
 	public COrder() {
 	}
@@ -190,16 +187,6 @@ public class COrder extends EntityBase {
 
 	public void setChargeStore(BigDecimal chargeStore) {
 		this.chargeStore = chargeStore;
-	}
-
-	@Basic
-	@Column(name="charge_take")
-	public BigDecimal getChargeTake() {
-		return chargeTake;
-	}
-
-	public void setChargeTake(BigDecimal chargeTake) {
-		this.chargeTake = chargeTake;
 	}
 
 	@Basic
@@ -512,36 +499,6 @@ public class COrder extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="total_amount", nullable=false)
-	public BigDecimal getTotalAmount() {
-		return totalAmount;
-	}
-
-	public void setTotalAmount(BigDecimal totalAmount) {
-		this.totalAmount = totalAmount;
-	}
-
-	@Basic
-	@Column(name="total_volume", nullable=false)
-	public BigDecimal getTotalVolume() {
-		return totalVolume;
-	}
-
-	public void setTotalVolume(BigDecimal totalVolume) {
-		this.totalVolume = totalVolume;
-	}
-
-	@Basic
-	@Column(name="total_weight", nullable=false)
-	public BigDecimal getTotalWeight() {
-		return totalWeight;
-	}
-
-	public void setTotalWeight(BigDecimal totalWeight) {
-		this.totalWeight = totalWeight;
-	}
-
-	@Basic
 	public String getUpdated() {
 		return updated;
 	}
@@ -559,4 +516,16 @@ public class COrder extends EntityBase {
 	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+	@Basic
+	@Column(name="total_charge")
+	public BigDecimal getTotalCharge() {
+		return totalCharge;
+	}
+
+	public void setTotalCharge(BigDecimal totalCharge) {
+		this.totalCharge = totalCharge;
+	}
+	
+	
 }

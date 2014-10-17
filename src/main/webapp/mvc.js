@@ -78,15 +78,15 @@ var loginUser, imageSizeMap, orderAutoLoadTime, subCommissionBase, resourceUrl, 
 					action: 'F'
 				},
 				{
+					text: '车次管理',
+					leaf: true,
+					id: 'MoveManagment',
+					action: 'F'
+				},
+				{
 					text: '发车管理',
 					leaf: true,
 					id: 117,
-					action: 'W'
-				},
-				{
-					text: '配送自提',
-					leaf: true,
-					id: 113,
 					action: 'W'
 				},
 				{
@@ -198,12 +198,6 @@ var loginUser, imageSizeMap, orderAutoLoadTime, subCommissionBase, resourceUrl, 
 					leaf: true,
 					id: 122,
 					action: 'W'
-				},
-				{
-					text: '地址管理',
-					leaf: true,
-					id: 116,
-					action: 'W'
 				}
 			]
 		},
@@ -291,9 +285,9 @@ Ext.define('CurrentUser', {
 });
 
 Ext.application({
-	models: [ 'OrderModel' ],
-	stores: [ 'MenuTreeStore', 'OrderStore' ],
-	views: [ 'ADWindowPanel', 'EnterOrder', 'MoveAssignment', 'Viewport' ],
+	models: [ 'InventoryVModel' ],
+	stores: [ 'MenuTreeStore' ],
+	views: [ 'ADWindowPanel', 'EnterOrder', 'MoveAssignment', 'MoveManagment', 'Viewport' ],
 	autoCreateViewport: true,
 	appFolder: 'mvc',
 	name: 'MyApp',
