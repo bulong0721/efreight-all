@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="image/x-png" rel="shortcut icon" href="images/transport16.png" />
 <title>ExtJS+DWR学习</title>
 <link rel="stylesheet" href="lib/extjs/resources/ext-theme-classic/ext-theme-classic-all.css">
 <link rel="stylesheet" href="styles/common.css">

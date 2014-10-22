@@ -3,15 +3,11 @@ package com.freight.service;
 import java.util.List;
 import java.util.Map;
 
-import com.freight.common.*;
-import com.freight.model.ADUser;
-import com.freight.model.COrder;
+import com.freight.common.LookupModel;
+import com.freight.common.PageResult;
+import com.freight.common.WindowModel;
 
 public interface FacadeService {
-
-	PageResult<COrder> searchOrder(Map<String, String> paramMap);
-
-	PageResult<ADUser> searchUser(Map<String, String> paramMap);
 
 	WindowModel getWindowModel(int windowID);
 
@@ -38,5 +34,7 @@ public interface FacadeService {
 	void deleteMoveline(String entityText);
 
 	void createMoveline(String entityText);
+
+	PageResult<?> getMenuItems();
 
 }

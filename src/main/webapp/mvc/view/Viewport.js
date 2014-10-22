@@ -12,19 +12,45 @@ Ext.define('MyApp.view.Viewport', {
 		}
 		return this.loginUserLabel;
 	},
-	menuStore: null,
-	getMenuStore: function () {
+
+	imageTpl: new Ext.XTemplate('<tpl for=".">', '<div style="margin: 10px 30px 10px 30px; padding: 10px; text-align: center" class="thumb-wrap">', '<img width="48" height="48" src="images/{image}" />', '<br/><strong>{itemName}</strong>', '</div>', '</tpl>'),
+
+	loadMenu: function () {
 		var me = this;
-		if (me.menuStore == null) {
-			me.menuStore = Ext.create('MyApp.store.MenuTreeStore', {
-				root: {
-					expanded: true,
-					children: CurrentUser.getUserMenus()
-				}
+		facade.getMenuItems(function (records) {
+			Ext.Array.each(records.rows, function (tree) {
+				var menuPanel = Ext.create('Ext.panel.Panel', {
+					title: tree.treeName,
+					iconCls: tree.iconClass,
+					layout: 'fit'
+				});
+				tree.items.sort(function (l, r) {
+					return l.seqNo - r.seqNo;
+				});
+				var viewStore = Ext.create('Ext.data.Store', {
+					model: 'MyApp.model.MenuModel',
+					data: tree.items
+				});
+				var menuView = Ext.create('Ext.view.View', {
+					deferInitialRefresh: false,
+					overflowY: 'scroll',
+					autoScroll: true,
+					store: viewStore,
+					overItemCls: 'menu_item_over',
+					tpl: me.imageTpl,
+					itemSelector: 'div.thumb-wrap',
+					listeners: {
+						itemclick: {
+							fn: me.buttonItemClick
+						}
+					}
+				});
+				menuPanel.add(menuView);
+				Ext.getCmp('westTabPanel').add(menuPanel);
 			});
-		}
-		return me.menuStore;
+		});
 	},
+
 	initComponent: function () {
 		var me = this;
 		Ext.applyIf(me, {
@@ -32,7 +58,7 @@ Ext.define('MyApp.view.Viewport', {
 				{
 					xtype: 'toolbar',
 					region: 'north',
-					height: 43,
+					height: 50,
 					items: [
 						{
 							xtype: 'label',
@@ -65,31 +91,17 @@ Ext.define('MyApp.view.Viewport', {
 				{
 					region: 'west',
 					flex: 1,
-					title: '菜单列表',
-					xtype: 'treepanel',
-//					layout: 'accordion',
-					syncRowHeight: false,
-					store: me.getMenuStore(),
-					folderSort: false,
-					lines: false,
-					rootVisible: false,
-					useArrows: true,
+					title: '系统导航',
+					xtype: 'panel',
+					id: 'westTabPanel',
+					layout: 'accordion',
 					collapsible: true,
-					split: true,
-					viewConfig: {
-						enableTextSelection: false
-					},
-					listeners: {
-						itemclick: {
-							fn: me.onTreepanelItemClick,
-							scope: me
-						}
-					}
+					split: true
 				},
 				{
 					region: 'center',
 					xtype: 'tabpanel',
-					flex: 4.8,
+					flex: 5,
 					layout: 'fit',
 					id: 'centerTabPanel'
 				},
@@ -100,6 +112,7 @@ Ext.define('MyApp.view.Viewport', {
 				}
 			]
 		});
+		me.loadMenu();
 		me.listeners = {
 			'boxready': function (_this, _width, _height, _eOpts) {
 				_this.getLoginUserLable().setText(CurrentUser.getLoginAccount());
@@ -129,37 +142,38 @@ Ext.define('MyApp.view.Viewport', {
 			}
 		});
 	},
-	onTreepanelItemClick: function (dataview, record, item, index, e, eOpts) {
+	buttonItemClick: function (dataview, record, item, index, e, eOpts) {
 		if (record == null || record.raw == null) {
 			return;
 		}
-		var action = record.raw.action || 'F';
-		var menuID = record.raw.id;
-		var ctrlID = action + "_" + menuID;
+		var model = record.raw, action = model.action, ctrlID = action + "_" + model.itemName;
 		var panel = Ext.getCmp(ctrlID);
 		if (null == panel) {
 			if ("W" == action) {
-				facade.getWindowModel(menuID, function (winModel) {
-					if (null == winModel) {
-						return;
+				facade.getWindowModel(model.windowID, function (winModel) {
+					if (null != winModel) {
+						panel = Ext.create("MyApp.view.ADWindowPanel", {
+							title: model.itemName,
+							windowModel: winModel,
+							tableID: winModel.tableID,
+							id: ctrlID,
+							tabConfig: {}
+						});
+						Ext.getCmp('centerTabPanel').add(panel);
+						Ext.getCmp('centerTabPanel').setActiveTab(panel);
 					}
-					panel = Ext.create("MyApp.view.ADWindowPanel", {
-						title: winModel.name,
-						windowModel: winModel,
-						tableID: winModel.tableID,
-						id: "W_" + winModel.tableID,
-						tabConfig: {}
-					});
-					Ext.getCmp('centerTabPanel').add(panel);
-					Ext.getCmp('centerTabPanel').setActiveTab(panel);
 				});
 			} else if ("F" == action) {
-				panel = Ext.create("MyApp.view." + menuID, {
+				panel = Ext.create(model.formPrototype, {
+					id: ctrlID,
+					title: model.itemName,
 					tabConfig: {}
 				});
 				Ext.getCmp('centerTabPanel').add(panel);
 				Ext.getCmp('centerTabPanel').setActiveTab(panel);
 			}
+		} else {
+			Ext.getCmp('centerTabPanel').setActiveTab(panel);
 		}
 	},
 	renderTo: Ext.getBody()

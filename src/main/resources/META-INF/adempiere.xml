@@ -44,4 +44,7 @@
 	<named-query name="queryMoveline">
 		<query>SELECT ml FROM CMoveLineV ml WHERE ml.cMoveID=:moveID</query>
 	</named-query>
+	<named-query name="queryMenuItem">
+		<query>SELECT t FROM ADTree t ORDER BY t.aDTreeID</query>
+	</named-query>
 </entity-mappings>

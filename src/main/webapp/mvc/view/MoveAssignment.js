@@ -202,7 +202,7 @@ Ext.define('MyApp.view.MoveAssignment', {
 					xtype: 'toolbar',
 					dock: 'top',
 					items: [
-						{ xtype: 'button', text: '添加装车',
+						{ xtype: 'button', text: '添加装车', iconCls: 'icon-add16',
 							listeners: {
 								click: {
 									fn: me.addMoveline,
@@ -256,7 +256,7 @@ Ext.define('MyApp.view.MoveAssignment', {
 					xtype: 'toolbar',
 					dock: 'top',
 					items: [
-						{ text: '移除装车',
+						{ text: '移除装车', iconCls: 'icon-delete16',
 							listeners: {
 								click: {
 									fn: me.removeMoveline,

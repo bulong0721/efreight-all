@@ -1,40 +1,17 @@
 package com.freight.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.freight.common.LookupModel;
-import com.freight.common.LookupTable;
-import com.freight.common.PageResult;
-import com.freight.common.WindowModel;
-import com.freight.model.ADClient;
-import com.freight.model.ADColumn;
-import com.freight.model.ADField;
-import com.freight.model.ADFieldV;
-import com.freight.model.ADOrg;
-import com.freight.model.ADRefListV;
-import com.freight.model.ADRefTable;
-import com.freight.model.ADUser;
-import com.freight.model.ADWindow;
-import com.freight.model.CBPartner;
-import com.freight.model.CInout;
-import com.freight.model.CInventory;
-import com.freight.model.CInventoryV;
-import com.freight.model.CMove;
-import com.freight.model.CMoveLine;
-import com.freight.model.COrder;
-import com.freight.model.COrderLine;
-import com.freight.model.CVehicle;
-import com.freight.service.AbstractService;
-import com.freight.service.FacadeService;
-import com.freight.service.OrderService;
-import com.freight.service.UserService;
+import com.freight.common.*;
+import com.freight.model.*;
+import com.freight.service.*;
 import com.freight.util.DTOUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 public class FacadeServiceImpl extends AbstractService implements FacadeService {
@@ -54,26 +31,14 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 		tableMap.put(120, COrder.class/* 运单管理 */);
 		tableMap.put(113, CInout.class/* 配送自提 */);
 	}
-	@Inject
-	private OrderService orderService;
-	@Inject
-	private UserService userService;
-
-	@Override
-	public PageResult<COrder> searchOrder(Map<String, String> paramMap) {
-		return orderService.search(paramMap);
-	}
-
-	@Override
-	public PageResult<ADUser> searchUser(Map<String, String> paramMap) {
-		return userService.search(paramMap);
-	}
 
 	@Override
 	public WindowModel getWindowModel(int windowID) {
 		Map<String, Object> paramMap = toMap("windowID", windowID);
-		ADWindow window = selectOneByNamedQuery("queryWindowByID", ADWindow.class, paramMap);
-		List<ADFieldV> fieldList = selectListByNamedQuery("queryFieldVByWindow", ADFieldV.class, paramMap);
+		ADWindow window = selectOneByNamedQuery("queryWindowByID",
+				ADWindow.class, paramMap);
+		List<ADFieldV> fieldList = selectListByNamedQuery(
+				"queryFieldVByWindow", ADFieldV.class, paramMap);
 		return DTOUtil.toWindowModel(window, fieldList);
 	}
 
@@ -81,10 +46,10 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 	public PageResult<?> search4Window(Map<String, String> paramMap,
 			Integer tableID) {
 		Class<?> entityClass = tableMap.get(tableID);
-		if (null != entityClass) {
-			return search(entityClass, paramMap);
+		if (null == entityClass) {
+			entityClass = ADUser.class;
 		}
-		return searchUser(paramMap);
+		return search(entityClass, paramMap);
 	}
 
 	@Transactional
@@ -187,13 +152,14 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 
 	@Override
 	public PageResult<?> searchInventory(Map<String, String> paramMap) {
-		int offset = Integer.parseInt(paramMap.get(PARAM_START)); 
-		int limit = Integer.parseInt(paramMap.get(PARAM_LIMIT)); 
+		int offset = Integer.parseInt(paramMap.get(PARAM_START));
+		int limit = Integer.parseInt(paramMap.get(PARAM_LIMIT));
 		Integer departOrgID = Integer.parseInt(paramMap.get("departOrgID"));
 		Integer destOrgID = Integer.parseInt(paramMap.get("destOrgID"));
 		Map<String, Object> queryMap = toMap("ownerOrgID", departOrgID);
 		queryMap.put("destOrgID", destOrgID);
-		List<?> rows = selectListByNamedQuery("queryInventory", CInventoryV.class, queryMap, offset, limit);
+		List<?> rows = selectListByNamedQuery("queryInventory",
+				CInventoryV.class, queryMap, offset, limit);
 		return new PageResult<>(rows, rows.size());
 	}
 
@@ -203,7 +169,8 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 		int limit = Integer.parseInt(paramMap.get(PARAM_LIMIT));
 		Integer moveID = Integer.parseInt(paramMap.get("moveID"));
 		Map<String, Object> queryMap = toMap("moveID", moveID);
-		List<?> rows = selectListByNamedQuery("queryMoveline", CInventoryV.class, queryMap, offset, limit);
+		List<?> rows = selectListByNamedQuery("queryMoveline",
+				CInventoryV.class, queryMap, offset, limit);
 		return new PageResult<>(rows, rows.size());
 	}
 
@@ -219,6 +186,18 @@ public class FacadeServiceImpl extends AbstractService implements FacadeService 
 	public void createMoveline(String entityText) {
 		List<?> entityList = JSON.parseArray(entityText, CMoveLine.class);
 		persistAll(entityList);
+	}
+
+	@Override
+	public PageResult<?> getMenuItems() {
+		List<ADTree> trees = selectListByNamedQuery("queryMenuItem", ADTree.class);
+		List<MenuModel> resultList = new ArrayList<>();
+		if (null != trees) {
+			for (ADTree tree : trees) {
+				resultList.add(new MenuModel(tree));
+			}
+		}
+		return new PageResult<>(resultList, resultList.size());
 	}
 
 }

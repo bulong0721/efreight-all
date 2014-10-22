@@ -82,7 +82,7 @@ Ext.define('MyApp.view.ADWindowPanel', {
 			actions = [
 				{
 					xtype: 'button',
-					iconCls: 'x-tree-icon-leaf',
+					iconCls: 'icon-add16',
 					itemId: 'addButton',
 					text: '新增',
 					listeners: {
@@ -91,18 +91,20 @@ Ext.define('MyApp.view.ADWindowPanel', {
 				},
 				{
 					xtype: 'button',
-					itemId: 'updateButton',
-					text: '保存',
-					listeners: {
-						click: { fn: me.updateModel, scope: me }
-					}
-				},
-				{
-					xtype: 'button',
+					iconCls: 'icon-delete16',
 					itemId: 'deleteButton',
 					text: '删除',
 					listeners: {
 						click: { fn: me.deleteModel, scope: me }
+					}
+				},
+				{
+					xtype: 'button',
+					iconCls: 'icon-save16',
+					itemId: 'updateButton',
+					text: '保存',
+					listeners: {
+						click: { fn: me.updateModel, scope: me }
 					}
 				}
 			];
