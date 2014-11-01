@@ -11,6 +11,9 @@ Ext.override(Ext.window.Window, {
 	constrain: true
 });
 
+Ext.override(Ext.form.field.Number, {
+	fieldStyle: 'text-align: right;'
+});
 
 Ext.define('Ext.ux.form.field.RangeDateField', {
 	extend: 'Ext.form.FieldContainer',
@@ -303,11 +306,14 @@ Ext.define('Ext.ux.column.List', {
 	},
 
 	defaultRenderer: function (value, metadata, record, rowIndex, columnIndex, store) {
-		var me = this, data = Lookup.refList[me.fieldName];
+		var me = this, data = Ext.Array.findBy(Lookup.refList, function (item) {
+			return item.columnName == me.fieldName;
+		});
 		if (!Ext.isEmpty(value) && !Ext.isEmpty(data)) {
-			for (var i = 0; i < data.length; i++) {
-				if (value == data[i].value) {
-					return data[i].display;
+			var items = data.items;
+			for (var i = 0; i < items.length; i++) {
+				if (value == items[i].value) {
+					return items[i].display;
 				}
 			}
 		}
@@ -334,6 +340,8 @@ Ext.define('Ext.ux.data.reader.DynamicMetaReader', {
 				} else if (11 == field.refType || 13 == field.refType) {
 					columnCfg = {width: 90};
 					modelFieldCfg = {type: 'int'};
+				} else if (17 == field.refType) {
+					columnCfg = {xtype: 'listcolumn', fieldName: field.fieldName, width: 65};
 				} else if (20 == field.refType) {
 					columnCfg = {xtype: 'checkcolumn', width: 65};
 					modelFieldCfg = {type: 'boolean'};
@@ -512,9 +520,8 @@ Ext.define('Ext.ux.LookupTable', {
 	handleItemClick: function (view, record, item, index, e, eOpts) {
 		var me = this;
 		me.record = record;
-		var oldValue = me.getValue();
-		var newValue = record.get(me.displayField);
-		me.setRawValue(record.get(me.displayField));
+		var oldValue = me.getValue(), newValue = record.raw[me.displayField];
+		me.setRawValue(newValue);
 		me.fireEvent("change", me, newValue, oldValue, null);
 		me.collapse();
 	},
@@ -578,9 +585,10 @@ Ext.define('Ext.ux.LookupTable', {
 	},
 
 	getValue: function () {
-		var me = this;
+		var me = this, value = null;
 		if (null != me.record) {
-			var value = me.record.get(me.valueField);
+			var rawData = me.record.raw;
+			value = rawData[me.valueField];
 			return value;
 		}
 		if (null == value) {
@@ -624,13 +632,15 @@ Ext.define('Ext.ux.LookupList', {
 	fieldName: null,
 
 	createStore: function () {
-		var me = this, data = Lookup.refList[me.fieldName];
+		var me = this, data = Ext.Array.findBy(Lookup.refList, function (item) {
+			return item.columnName == me.fieldName;
+		});
 		return Ext.create('Ext.data.Store', {
 			fields: [
 				{name: 'display', type: 'string'},
-				{name: 'value'}
+				{name: 'value', type: data.refClass }
 			],
-			data: Ext.clone(data)
+			data: Ext.clone(data.items)
 		});
 	},
 
@@ -660,7 +670,7 @@ Ext.define('Lookup', {
 		}
 		facade.getAllRefList(function (data) {
 			if (null != data) {
-				Lookup.refList = data;
+				Lookup.refList = data.rows;
 			}
 		});
 	}

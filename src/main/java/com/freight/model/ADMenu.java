@@ -16,7 +16,6 @@ public class ADMenu extends EntityBase {
 	private Integer aDOrgID;
 	private String action;
 	private Integer aDMenuID;
-	private Integer aDTreeID;
 	private Integer adWindowId;
 	private String created;
 	private Integer createdby;
@@ -78,16 +77,6 @@ public class ADMenu extends EntityBase {
 	}
 
 	@Basic
-	@Column(name="AD_TREE_ID", columnDefinition="INT", nullable=false)
-	public Integer getADTreeID() {
-		return aDTreeID;
-	}
-
-	public void setADTreeID(Integer aDTreeID) {
-		this.aDTreeID = aDTreeID;
-	}
-
-	@Basic
 	@Column(name="AD_WINDOW_ID", columnDefinition="INT")
 	public Integer getAdWindowId() {
 		return adWindowId;
@@ -108,7 +97,7 @@ public class ADMenu extends EntityBase {
 	}
 
 	@Basic
-	@Column(columnDefinition="INT", nullable=false)
+	@Column(name ="created_by", columnDefinition="INT", nullable=false)
 	public Integer getCreatedby() {
 		return createdby;
 	}
@@ -187,7 +176,7 @@ public class ADMenu extends EntityBase {
 	}
 
 	@Basic
-	@Column(columnDefinition="INT", nullable=false)
+	@Column(name ="updated_by", columnDefinition="INT", nullable=false)
 	public Integer getUpdatedby() {
 		return updatedby;
 	}

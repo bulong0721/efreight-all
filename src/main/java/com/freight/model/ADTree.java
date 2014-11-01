@@ -85,7 +85,7 @@ public class ADTree extends EntityBase {
 	}
 
 	@Basic
-	@Column(columnDefinition = "INT", nullable = false)
+	@Column(name ="created_by", columnDefinition = "INT", nullable = false)
 	public Integer getCreatedby() {
 		return createdby;
 	}
@@ -144,7 +144,7 @@ public class ADTree extends EntityBase {
 	}
 
 	@Basic
-	@Column(columnDefinition = "INT", nullable = false)
+	@Column(name ="updated_by", columnDefinition = "INT", nullable = false)
 	public Integer getUpdatedby() {
 		return updatedby;
 	}

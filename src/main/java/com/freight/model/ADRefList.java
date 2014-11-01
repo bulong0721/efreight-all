@@ -15,7 +15,6 @@ public class ADRefList extends EntityBase {
 	private Integer aDClientID;
 	private Integer aDOrgID;
 	private Integer aDRefListID;
-	private Integer aDReferenceID;
 	private Boolean active;
 	private String created;
 	private Integer createdBy;
@@ -23,6 +22,7 @@ public class ADRefList extends EntityBase {
 	private String updated;
 	private Integer updatedBy;
 	private String value;
+	private ADReference reference;
 
 	public ADRefList() {
 	}
@@ -63,14 +63,14 @@ public class ADRefList extends EntityBase {
 		this.aDRefListID = aDRefListID;
 	}
 
-	@Basic
-	@Column(name="ad_reference_id", columnDefinition="INT", nullable=false)
-	public Integer getADReferenceID() {
-		return aDReferenceID;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "AD_REFERENCE_ID")
+	public ADReference getReference() {
+		return reference;
 	}
 
-	public void setADReferenceID(Integer aDReferenceID) {
-		this.aDReferenceID = aDReferenceID;
+	public void setReference(ADReference reference) {
+		this.reference = reference;
 	}
 
 	@Basic

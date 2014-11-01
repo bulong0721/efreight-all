@@ -2,7 +2,8 @@
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="freight" transaction-type="RESOURCE_LOCAL">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<!-- <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider> -->
 		<mapping-file>META-INF/adempiere.xml</mapping-file>
 		<class>com.freight.model.ADClient</class>
 		<class>com.freight.model.ADColumn</class>
@@ -10,7 +11,6 @@
 		<class>com.freight.model.ADOrg</class>
 		<class>com.freight.model.ADReference</class>
 		<class>com.freight.model.ADRefList</class>
-		<class>com.freight.model.ADRefListV</class>
 		<class>com.freight.model.ADWindow</class>
 		<class>com.freight.model.ADTable</class>
 		<class>com.freight.model.ADUser</class>
@@ -34,14 +34,18 @@
 		<class>com.freight.model.CInventoryV</class>
 		<class>com.freight.model.CMoveLineV</class>
 		<class>com.freight.model.COrderLineV</class>
-		<class>com.freight.model.ADMenuV</class>
 		<class>com.freight.model.ADTree</class>
 		<class>com.freight.model.ADMenu</class>
+		<class>com.freight.model.CMoveV</class>
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/acuity" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/freight" />
 			<property name="javax.persistence.jdbc.user" value="adempiere" />
 			<property name="javax.persistence.jdbc.password" value="adempiere" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			
 			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE" />
 			<!-- <property name="openjpa.RuntimeUnenhancedClasses" value="supported" /> -->
 			<!-- <property name="openjpa.MaxFetchDepth" value="1"/> -->

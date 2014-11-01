@@ -5,6 +5,7 @@ Ext.define('MyApp.view.EnterOrder', {
 	extend: 'Ext.form.Panel',
 	closable: true,
 	id: 'EnterOrder',
+	orderModel: null,
 	title: '录入运单',
 	frame: true,
 	defaults: {
@@ -34,7 +35,6 @@ Ext.define('MyApp.view.EnterOrder', {
 
 	loadOrder: function (picker) {
 		var me = this, record = picker.getRecord(), form = me.getForm();
-		//		form.loadRecord(record.raw);
 	},
 
 	createFields: function () {
@@ -48,13 +48,14 @@ Ext.define('MyApp.view.EnterOrder', {
 					labelAlign: 'right'
 				},
 				items: [
-					{ name: 'dateOrdered', xtype: 'datefield', value: new Date(), format: 'Y/m/d', flex: 3, fieldLabel: '受理日期'},
-					{ name: 'orderCd', xtype: 'lookuptable', refValueID: 130, allowBlank: false, flex: 4, labelStyle: 'font-weight:bold;', fieldLabel: '托运单号', listeners: {
+					{ name: 'orderStatus', xtype: 'lookuplist', fieldCls: 'special-attention', readOnly: true, fieldName: 'orderStatus', flex: 2, value: 1, fieldLabel: '运单状态' },
+					{ name: 'orderCd', xtype: 'lookuptable', refValueID: 130, allowBlank: false, flex: 3.5, labelStyle: 'font-weight:bold;', fieldLabel: '托运单号', listeners: {
 						change: {
 							fn: me.loadOrder,
 							scope: me
 						}
 					} },
+					{ name: 'dateOrdered', xtype: 'datefield', value: new Date(), format: 'Y/m/d', flex: 2.5, fieldLabel: '受理日期'},
 					{ name: 'datePromise', xtype: 'datefield', flex: 2.5, format: 'Y/m/d', fieldLabel: '承诺日期' },
 					{ name: 'orderedOrgID', xtype: 'lookuptable', allowBlank: false, flex: 2.5, refValueID: 101, fieldLabel: '起始站' },
 					{ name: 'destinationOrgID', xtype: 'lookuptable', allowBlank: false, flex: 2.5, refValueID: 101, fieldLabel: '终点站' }
@@ -122,9 +123,21 @@ Ext.define('MyApp.view.EnterOrder', {
 					labelAlign: 'right'
 				},
 				items: [
-					{ name: 'moveMethod', xtype: 'lookuplist', fieldName: 'transportType', width: 180, value: '0', fieldLabel: '运输类型' },
-					{ name: 'deliveryMethod', xtype: 'lookuplist', fieldName: 'deliveryMethod', allowBlank: false, value: '0', width: 180, fieldLabel: '交货方式' },
-					{ name: 'receiptCopies', xtype: 'numberfield', minValue: 0, value: 0, width: 150, fieldLabel: '回单数量' }
+					{ name: 'moveMethod', xtype: 'lookuplist', fieldName: 'transportType', width: 150, value: 0, fieldLabel: '运输类型' },
+					{ name: 'pickup', xtype: 'checkboxfield', inputValue: 1, fieldLabel: '上门接货',
+						listeners: {
+							change: {
+								fn: function (combo, newValue) {
+									var me = this, orderStatus = newValue ? 0 : 1;
+									if (null == me.orderModel) {
+										me.getForm().findField("orderStatus").setValue(orderStatus);
+									}
+								},
+								scope: me
+							}
+						} },
+					{ name: 'delivery', xtype: 'checkboxfield', inputValue: 1, fieldLabel: '送货上门' },
+					{ name: 'receiptCopies', xtype: 'numberfield', minValue: 0, value: 0, width: 135, fieldLabel: '回单数量' }
 				]
 			},
 			{
@@ -147,13 +160,13 @@ Ext.define('MyApp.view.EnterOrder', {
 							labelAlign: 'top'
 						},
 						items: [
-							{ name: 'name', xtype: 'lookuplist', fieldName: 'chargeMethod', editable: true, flex: 1.5, fieldLabel: '品名' },
-							{ name: 'package', xtype: 'lookuplist', fieldName: 'chargeMethod', editable: true, flex: 1.2, fieldLabel: '包装' },
+							{ name: 'name', xtype: 'lookuplist', fieldName: 'goodsType', editable: true, flex: 1.5, fieldLabel: '品名' },
+							{ name: 'package', xtype: 'lookuplist', fieldName: 'packageType', editable: true, flex: 1.2, fieldLabel: '包装' },
 							{ name: 'amount', minValue: 0, maxValue: 100, value: 1, flex: 1, fieldLabel: '件数' },
 							{ name: 'weight', minValue: 0, value: 0, flex: 1, fieldLabel: '重量' },
 							{ name: 'volume', minValue: 0, value: 0, flex: 1, fieldLabel: '体积' },
 							{ name: 'price', flex: 1, minValue: 0, value: 0, fieldLabel: '单价' },
-							{ name: 'chargeMethod', xtype: 'lookuplist', flex: 1.2, fieldName: 'chargeMethod', value: '2', fieldLabel: '计费方式' },
+							{ name: 'chargeMethod', xtype: 'lookuplist', flex: 1.2, fieldName: 'chargeMethod', value: 2, fieldLabel: '计费方式' },
 							{ name: 'chargeFreight', minValue: 0, value: 0, flex: 1, fieldLabel: '基本运费' },
 							{ name: 'chargePickup', minValue: 0, value: 0, flex: 1, fieldLabel: '接货费' },
 							{ name: 'chargeDelivery', minValue: 0, value: 0, flex: 1, fieldLabel: '送货费' },
@@ -188,7 +201,7 @@ Ext.define('MyApp.view.EnterOrder', {
 					labelAlign: 'right'
 				},
 				items: [
-					{ name: 'payMethod', xtype: 'lookuplist', fieldName: 'payMethod', value: '0', flex: 2.5, fieldLabel: '付款方式' },
+					{ name: 'payMethod', xtype: 'lookuplist', fieldName: 'payMethod', value: 0, flex: 2.5, fieldLabel: '付款方式' },
 					{ name: 'paidConsignor', xtype: 'numberfield', minValue: 0, value: 0, flex: 2, fieldLabel: '现付' },
 					{ name: 'paidConsignee', xtype: 'numberfield', minValue: 0, value: 0, flex: 2, fieldLabel: '到付' },
 					{ name: 'paidReceipt', xtype: 'numberfield', minValue: 0, value: 0, flex: 2, fieldLabel: '回单付' },
@@ -240,7 +253,8 @@ Ext.define('MyApp.view.EnterOrder', {
 		if (form.isValid()) {
 			var values = form.getValues();
 			facade.saveOrder(Ext.JSON.encode(values), function (success) {
-				//				form.reset();
+				Ext.Msg.alert("千途物流平台","运单保存成功。")
+				form.reset();
 			});
 		}
 	},

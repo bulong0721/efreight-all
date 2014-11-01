@@ -59,6 +59,8 @@ public class COrder extends EntityBase {
 	private String updated;
 	private Integer updatedBy;
 	private BigDecimal totalCharge;
+	private boolean pickup;
+	private boolean delivery;
 
 	public COrder() {
 	}
@@ -525,6 +527,22 @@ public class COrder extends EntityBase {
 
 	public void setTotalCharge(BigDecimal totalCharge) {
 		this.totalCharge = totalCharge;
+	}
+
+	public boolean isPickup() {
+		return pickup;
+	}
+
+	public void setPickup(boolean pickup) {
+		this.pickup = pickup;
+	}
+
+	public boolean isDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(boolean delivery) {
+		this.delivery = delivery;
 	}
 	
 	

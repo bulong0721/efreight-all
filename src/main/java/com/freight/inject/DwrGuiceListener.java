@@ -3,12 +3,9 @@ package com.freight.inject;
 import org.directwebremoting.guice.DwrGuiceServletContextListener;
 import org.directwebremoting.guice.ParamName;
 
-import com.freight.common.DwrSerializable;
-import com.freight.common.EntityBase;
-import com.freight.common.EntityConverter;
-import com.freight.common.PageResult;
-import com.freight.service.FacadeService;
-import com.freight.service.impl.FacadeServiceImpl;
+import com.freight.common.*;
+import com.freight.service.*;
+import com.freight.service.impl.*;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 public class DwrGuiceListener extends DwrGuiceServletContextListener {
@@ -20,6 +17,8 @@ public class DwrGuiceListener extends DwrGuiceServletContextListener {
         bindConversion(DwrSerializable.class).to(EntityConverter.class);
         bindConversion(PageResult.class).to(EntityConverter.class);
         bindConversion(EntityBase.class).to(EntityConverter.class);
+        bind(InoutService.class).to(InoutServiceImpl.class);
+        bind(InventoryService.class).to(InventoryServiceImpl.class);
         bindRemotedAs("facade", FacadeService.class).to(FacadeServiceImpl.class);
         bindParameter(ParamName.DEBUG).to(true);
     }

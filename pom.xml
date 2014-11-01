@@ -8,6 +8,7 @@
 	<name>acuity-extjs Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<properties>
+		<version.hibernate>4.3.5.Final</version.hibernate>
 		<version.fastjson>1.1.41</version.fastjson>
 		<version.openjpa>2.3.0</version.openjpa>
 		<version.guice>3.0</version.guice>
@@ -21,6 +22,11 @@
 			<version>5.1.26</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
@@ -31,10 +37,17 @@
 			<version>${version.dwr}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${version.hibernate}</version>
+		</dependency>
+		<!-- 
+		<dependency>
 			<groupId>org.apache.openjpa</groupId>
 			<artifactId>openjpa-all</artifactId>
 			<version>${version.openjpa}</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -95,6 +108,7 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<!-- 
 			<plugin>
 				<groupId>org.apache.openjpa</groupId>
 				<artifactId>openjpa-maven-plugin</artifactId>
@@ -115,6 +129,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>

@@ -184,14 +184,15 @@ Ext.define('MyApp.view.ADWindowPanel', {
 				modelFieldCfg = {type: 'float'};
 			} else if (11 == field.refType) {
 				editorCfg = {xtype: 'numberfield'};
-				columnCfg = {width: 90};
+				columnCfg = {width: 75};
 				modelFieldCfg = {type: 'int'};
 			} else if (17 == field.refType) {
 				editorCfg = {xtype: 'lookuplist', fieldName: field.fieldName};
-				columnCfg = {xtype: 'listcolumn', fieldName: field.fieldName, width: 120};
+				columnCfg = {xtype: 'listcolumn', fieldName: field.fieldName, width: 90};
 			} else if (18 == field.refType) {
 				editorCfg = {xtype: 'lookuptable', refValueID: field.refValueID};
 				columnCfg = {width: 120};
+				modelFieldCfg = {type: 'int'};
 			} else if (20 == field.refType) {
 				editorCfg = {xtype: 'checkboxfield'};
 				columnCfg = {xtype: 'checkcolumn', width: 65};

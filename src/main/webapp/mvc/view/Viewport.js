@@ -157,6 +157,7 @@ Ext.define('MyApp.view.Viewport', {
 							windowModel: winModel,
 							tableID: winModel.tableID,
 							id: ctrlID,
+							iconCls: 'icon-window16',
 							tabConfig: {}
 						});
 						Ext.getCmp('centerTabPanel').add(panel);
@@ -167,6 +168,7 @@ Ext.define('MyApp.view.Viewport', {
 				panel = Ext.create(model.formPrototype, {
 					id: ctrlID,
 					title: model.itemName,
+					iconCls: 'icon-form16',
 					tabConfig: {}
 				});
 				Ext.getCmp('centerTabPanel').add(panel);

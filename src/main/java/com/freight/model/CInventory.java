@@ -15,7 +15,6 @@ public class CInventory extends EntityBase {
 	private Integer aDClientID;
 	private Integer aDOrgID;
 	private Boolean active;
-	private Integer cInoutLineID;
 	private Integer cInventoryID;
 	private Integer cOrderID;
 	private Integer cOrderLineID;
@@ -60,16 +59,6 @@ public class CInventory extends EntityBase {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	@Basic
-	@Column(name="c_inout_line_id", columnDefinition="INT", nullable=false)
-	public Integer getCInoutLineID() {
-		return cInoutLineID;
-	}
-
-	public void setCInoutLineID(Integer cInoutLineID) {
-		this.cInoutLineID = cInoutLineID;
 	}
 
 	@Id

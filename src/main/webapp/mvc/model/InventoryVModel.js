@@ -4,7 +4,7 @@ Ext.define('MyApp.model.InventoryVModel', {
 		{ name: 'cInventoryID', type: 'int' },
 		{ name: 'cWarehouseID', type: 'int' },
 		{ name: 'cMoveID', type: 'int' },
-		{ name: 'cMoveLineID', type: 'int' },
+		{ name: 'cMoveLineID', type: 'int', useNull: true },
 		{ name: 'orderCd'},
 		{ name: 'dateOrdered', type: 'date' },
 		{ name: 'departOrgID', type: 'int' },

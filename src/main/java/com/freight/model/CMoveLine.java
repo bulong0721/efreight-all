@@ -17,11 +17,13 @@ public class CMoveLine extends EntityBase {
 	private Boolean active;
 	private Integer cMoveID;
 	private Integer cMoveLineID;
+	private Integer cOrderID;
 	private Integer cOrderLineID;
 	private String created;
 	private Integer createdBy;
 	private String updated;
 	private Integer updatedBy;
+	private Integer cInventoryID;
 
 	public CMoveLine() {
 	}
@@ -83,6 +85,16 @@ public class CMoveLine extends EntityBase {
 	}
 
 	@Basic
+	@Column(name="c_order_id", columnDefinition="INT", nullable=false)
+	public Integer getCOrderID() {
+		return cOrderID;
+	}
+
+	public void setCOrderID(Integer cOrderID) {
+		this.cOrderID = cOrderID;
+	}
+
+	@Basic
 	@Column(name="c_order_line_id", columnDefinition="INT", nullable=false)
 	public Integer getCOrderLineID() {
 		return cOrderLineID;
@@ -130,4 +142,16 @@ public class CMoveLine extends EntityBase {
 	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+	@Basic
+	@Column(name="c_inventory_id", columnDefinition="INT")
+	public Integer getCInventoryID() {
+		return cInventoryID;
+	}
+
+	public void setCInventoryID(Integer cInventoryID) {
+		this.cInventoryID = cInventoryID;
+	}
+	
+	
 }

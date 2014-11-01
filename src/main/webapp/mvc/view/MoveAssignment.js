@@ -11,12 +11,40 @@ Ext.define('MyApp.view.MoveAssignment', {
 	moveModel: null,
 
 	loadMove: function (picker) {
+		var me = this, record = picker.getRecord(), form = me.moveForm.getForm();
+		if (record) {
+			me.moveModel = record.raw;
+			form.setValues(me.moveModel);
+			form.findField("departOrgID").setRawValue(me.moveModel.departOrgName);
+			form.findField("destOrgID").setRawValue(me.moveModel.arriveOrgName);
+			form.findField("cVehicleID").setRawValue(me.moveModel.plateNo);
+			me.lineStore.loadPage(1);
+		}
+	},
 
+	loadVehicle: function (picker) {
+		var me = this, record = picker.getRecord(), form = me.moveForm.getForm();
+		if (record) {
+			record = record.raw;
+			form.findField("vehicleNature").setValue(record.vehicleNature);
+			form.findField("ownerName").setValue(record.owner);
+			form.findField("ownerPhone").setValue(record.ownerPhone);
+			form.findField("driverName").setValue(record.driver);
+			form.findField("driverPhone").setValue(record.driverPhone);
+		}
+	},
+
+	statMoveline: function () {
+		var me = this, form = me.moveForm.getForm(), store = me.lineStore;
+		form.findField("totalFreight").setValue(store.sum("totalCharge"));
+		form.findField("totalWeight").setValue(store.sum("weight"));
+		form.findField("totalAmount").setValue(store.sum("amount"));
+		form.findField("totalVolume").setValue(store.sum("volume"));
 	},
 
 	createMoveForm: function () {
 		var me = this;
-		me.moveForm = Ext.widget('form', {
+		me.moveForm = Ext.create('Ext.form.Panel', {
 			frame: true,
 			border: 0,
 			defaults: {
@@ -31,7 +59,7 @@ Ext.define('MyApp.view.MoveAssignment', {
 				{
 					items: [
 						{ name: 'dateOrdered', xtype: 'datefield', value: new Date(), format: 'Y/m/d', flex: 1, fieldLabel: '协议日期'},
-						{ name: 'contractNo', xtype: 'lookuptable', readOnly: false, refValueID: 130, allowBlank: false, flex: 1, labelStyle: 'font-weight:bold;', fieldLabel: '协议编号',
+						{ name: 'contractNo', xtype: 'lookuptable', readOnly: false, refValueID: 131, allowBlank: false, flex: 1, labelStyle: 'font-weight:bold;', fieldLabel: '协议编号',
 							listeners: {
 								change: {
 									fn: me.loadMove,
@@ -40,7 +68,7 @@ Ext.define('MyApp.view.MoveAssignment', {
 							}
 						},
 						{ name: 'moveType', xtype: 'lookuplist', fieldName: 'moveType', allowBlank: false, flex: 1, fieldLabel: '发车类型' },
-						{ name: 'moveStatus', xtype: 'lookuplist', fieldName: 'moveStatus', readOnly: true, value: '0', tabIndex: -1, flex: 1, fieldLabel: '车次状态' },
+						{ name: 'moveStatus', xtype: 'lookuplist', fieldName: 'moveStatus', readOnly: true, value: 0, tabIndex: -1, flex: 1, fieldLabel: '车次状态', fieldCls: 'special-attention' },
 						{ name: 'totalFreight', xtype: 'numberfield', readOnly: true, tabIndex: -1, value: 0, flex: 0.9, fieldLabel: '总运费' },
 						{ name: 'chargeFreight', xtype: 'numberfield', value: 0, flex: 0.9, fieldLabel: '运输费' }
 					]
@@ -57,9 +85,16 @@ Ext.define('MyApp.view.MoveAssignment', {
 				},
 				{
 					items: [
-						{ name: 'cVehicleID', xtype: 'lookuptable', allowBlank: false, flex: 1, refValueID: 110, fieldLabel: '车牌号码' },
+						{ name: 'cVehicleID', xtype: 'lookuptable', allowBlank: false, flex: 1, refValueID: 123, fieldLabel: '车牌号码',
+							listeners: {
+								change: {
+									fn: me.loadVehicle,
+									scope: me
+								}
+							}
+						},
 						{ name: 'vehicleNature', xtype: 'lookuplist', fieldName: 'vehicleNature', readOnly: true, tabIndex: -1, flex: 1, fieldLabel: '车辆性质' },
-						{ name: 'driverOwner', xtype: 'textfield', readOnly: true, tabIndex: -1, flex: 1, fieldLabel: '车主' },
+						{ name: 'ownerName', xtype: 'textfield', readOnly: true, tabIndex: -1, flex: 1, fieldLabel: '车主' },
 						{ name: 'ownerPhone', xtype: 'textfield', readOnly: true, tabIndex: -1, flex: 1, fieldLabel: '车主电话' },
 						{ name: 'totalWeight', xtype: 'numberfield', readOnly: true, tabIndex: -1, minValue: 0, value: 0, flex: 0.9, fieldLabel: '总重量' },
 						{ name: 'paidArrive', xtype: 'numberfield', minValue: 0, value: 0, flex: 0.9, fieldLabel: '到付' }
@@ -69,7 +104,7 @@ Ext.define('MyApp.view.MoveAssignment', {
 					items: [
 						{ name: 'driverName', xtype: 'lookuptable', allowBlank: false, flex: 1, refValueID: 110, fieldLabel: '司机' },
 						{ name: 'driverPhone', xtype: 'textfield', readOnly: true, tabIndex: -1, flex: 1, fieldLabel: '司机电话' },
-						{ name: 'comment', xtype: 'textfield', readOnly: true, tabIndex: -1, flex: 2, fieldLabel: '发车备注' },
+						{ name: 'comment', xtype: 'textfield', tabIndex: -1, flex: 2, fieldLabel: '发车备注' },
 						{ name: 'totalVolume', xtype: 'numberfield', readOnly: true, tabIndex: -1, minValue: 0, value: 0, flex: 0.9, fieldLabel: '总体积' },
 						{ name: 'paidReceipt', xtype: 'numberfield', minValue: 0, value: 0, flex: 0.9, fieldLabel: '回付' }
 					]
@@ -84,7 +119,7 @@ Ext.define('MyApp.view.MoveAssignment', {
 					}
 				} },
 				'-',
-				{ text: '保存配载', listeners: {
+				{ text: '保存发车', listeners: {
 					click: {
 						fn: me.saveAssignment,
 						scope: me
@@ -138,6 +173,8 @@ Ext.define('MyApp.view.MoveAssignment', {
 			autoLoad: false,
 			proxy: {
 				type: 'dwr',
+				passDwrStoreParams: true,
+				dwrParams: [],
 				dwrFunction: {
 					read: facade.searchMoveline,
 					create: facade.createMoveline,
@@ -175,21 +212,44 @@ Ext.define('MyApp.view.MoveAssignment', {
 		var me = this, form = me.moveForm.getForm();
 		if (form.isValid()) {
 			var values = form.getValues();
+			if (null != me.moveModel) {
+				values.cMoveID = me.moveModel.cMoveID;
+			}
 			facade.saveMove(Ext.JSON.encode(values), function (moveID) {
 				me.moveModel = Ext.clone(values);
 				me.moveModel.cMoveID = moveID;
+				me.syncMoveID();
 				me.lineStore.sync();
 				Ext.Msg.alert("提示", "发车保存成功。");
 			});
 		}
 	},
 
+	syncMoveID: function (moveID) {
+		var me = this;
+		me.lineStore.each(function (record) {
+			record.cMoveID = moveID;
+		});
+	},
+
 	addMoveline: function () {
 		var me = this, selModel = me.inventoryGrid.getSelectionModel();
+		Ext.Array.each(selModel.getSelection(), function (record) {
+			var lineModel = Ext.create('MyApp.model.InventoryVModel', record.raw);
+			me.lineStore.add(lineModel);
+			me.inventoryStore.remove(record);
+			me.statMoveline();
+		});
 	},
 
 	removeMoveline: function () {
-
+		var me = this, selModel = me.lineGrid.getSelectionModel();
+		Ext.Array.each(selModel.getSelection(), function (record) {
+			var inventoryModel = Ext.create('MyApp.model.InventoryVModel', record.raw);
+			me.inventoryStore.add(inventoryModel);
+			me.lineStore.remove(record);
+			me.statMoveline();
+		});
 	},
 
 	createInventoryGrid: function () {
@@ -264,11 +324,6 @@ Ext.define('MyApp.view.MoveAssignment', {
 								}
 							}}
 					]
-				},
-				{
-					xtype: 'pagingtoolbar',
-					dock: 'bottom',
-					displayInfo: true
 				}
 			],
 			selType: 'checkboxmodel'

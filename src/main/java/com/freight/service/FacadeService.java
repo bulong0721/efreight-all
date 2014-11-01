@@ -1,9 +1,7 @@
 package com.freight.service;
 
-import java.util.List;
 import java.util.Map;
 
-import com.freight.common.LookupModel;
 import com.freight.common.PageResult;
 import com.freight.common.WindowModel;
 
@@ -11,7 +9,7 @@ public interface FacadeService {
 
 	WindowModel getWindowModel(int windowID);
 
-	Map<String, List<LookupModel>> getAllRefList();
+	PageResult<?> getAllRefList();
 
 	PageResult<?> search4Window(Map<String, String> paramMap, Integer tableID);
 
@@ -33,8 +31,8 @@ public interface FacadeService {
 
 	void deleteMoveline(String entityText);
 
-	void createMoveline(String entityText);
+    void createMoveline(String entityText);
 
-	PageResult<?> getMenuItems();
+    PageResult<?> getMenuItems();
 
 }

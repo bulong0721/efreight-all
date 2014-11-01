@@ -222,12 +222,40 @@ tr.x-grid-row-selected {
 .icon-system {
 	background-image: url('../images/system16.png');
 }
+
 .icon-add16 {
 	background-image: url('../images/add16.png');
 }
+
 .icon-delete16 {
 	background-image: url('../images/delete16.png');
 }
+
 .icon-save16 {
 	background-image: url('../images/save16.png');
+}
+
+.icon-window16 {
+	background-image: url('../images/window16.png');
+}
+
+.icon-form16 {
+	background-image: url('../images/form16.png');
+}
+
+.icon-find16 {
+	background-image: url('../images/find16.png');
+}
+
+.attention {
+	color: #ff0000;
+	font: normal bold 12px tahoma, arial, verdana, sans-serif;
+	text-align: center;
+}
+
+.special-attention {
+	color: #ff0000;
+	font: normal bold 12px tahoma, arial, verdana, sans-serif;
+	text-align: center;
+	letter-spacing: 5px;
 }

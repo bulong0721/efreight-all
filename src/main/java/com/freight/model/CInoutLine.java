@@ -1,7 +1,13 @@
 package com.freight.model;
 
-import java.math.*;
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import com.freight.common.EntityBase;
 
@@ -18,14 +24,15 @@ public class CInoutLine extends EntityBase {
 	private Boolean active;
 	private Integer cInoutID;
 	private Integer cInoutLineID;
+	private Integer cOrderID;
 	private Integer cOrderLineID;
-	private BigDecimal confirmedQty;
 	private String created;
 	private Integer createdBy;
-	private BigDecimal moveQty;
-	private BigDecimal pickQty;
-	private BigDecimal scrappedQty;
-	private BigDecimal targetQty;
+	private Integer moveQty;
+	private Integer pickQty;
+	private Integer scrappedQty;
+	private Integer targetQty;
+	private Integer confirmedQty;
 	private String updated;
 	private Integer updatedBy;
 
@@ -87,6 +94,16 @@ public class CInoutLine extends EntityBase {
 	public void setCInoutLineID(Integer cInoutLineID) {
 		this.cInoutLineID = cInoutLineID;
 	}
+	
+	@Basic
+	@Column(name="c_order_id", columnDefinition="INT", nullable=false)
+	public Integer getCOrderID() {
+		return cOrderID;
+	}
+
+	public void setCOrderID(Integer cOrderID) {
+		this.cOrderID = cOrderID;
+	}
 
 	@Basic
 	@Column(name="c_order_line_id", columnDefinition="INT", nullable=false)
@@ -100,11 +117,11 @@ public class CInoutLine extends EntityBase {
 
 	@Basic
 	@Column(name="confirmed_qty")
-	public BigDecimal getConfirmedQty() {
+	public Integer getConfirmedQty() {
 		return confirmedQty;
 	}
 
-	public void setConfirmedQty(BigDecimal confirmedQty) {
+	public void setConfirmedQty(Integer confirmedQty) {
 		this.confirmedQty = confirmedQty;
 	}
 
@@ -130,41 +147,41 @@ public class CInoutLine extends EntityBase {
 
 	@Basic
 	@Column(name="move_qty", nullable=false)
-	public BigDecimal getMoveQty() {
+	public Integer getMoveQty() {
 		return moveQty;
 	}
 
-	public void setMoveQty(BigDecimal moveQty) {
+	public void setMoveQty(Integer moveQty) {
 		this.moveQty = moveQty;
 	}
 
 	@Basic
 	@Column(name="pick_qty")
-	public BigDecimal getPickQty() {
+	public Integer getPickQty() {
 		return pickQty;
 	}
 
-	public void setPickQty(BigDecimal pickQty) {
+	public void setPickQty(Integer pickQty) {
 		this.pickQty = pickQty;
 	}
 
 	@Basic
 	@Column(name="scrapped_qty")
-	public BigDecimal getScrappedQty() {
+	public Integer getScrappedQty() {
 		return scrappedQty;
 	}
 
-	public void setScrappedQty(BigDecimal scrappedQty) {
+	public void setScrappedQty(Integer scrappedQty) {
 		this.scrappedQty = scrappedQty;
 	}
 
 	@Basic
 	@Column(name="target_qty")
-	public BigDecimal getTargetQty() {
+	public Integer getTargetQty() {
 		return targetQty;
 	}
 
-	public void setTargetQty(BigDecimal targetQty) {
+	public void setTargetQty(Integer targetQty) {
 		this.targetQty = targetQty;
 	}
 

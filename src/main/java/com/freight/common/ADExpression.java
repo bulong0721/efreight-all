@@ -14,22 +14,22 @@ public class ADExpression implements Serializable {
     private String            value1;
     private String            value2;
 
-    public ADExpression(){
+    public ADExpression() {
     }
 
-    public ADExpression(String columnName){
+    public ADExpression(String columnName) {
         this(columnName, FieldOperator.Equal);
     }
 
-    public ADExpression(String columnName, FieldOperator fieldOperator){
+    public ADExpression(String columnName, FieldOperator fieldOperator) {
         this(columnName, fieldOperator, null, null);
     }
 
-    public ADExpression(String columnName, FieldOperator fieldOperator, String value1){
+    public ADExpression(String columnName, FieldOperator fieldOperator, String value1) {
         this(columnName, fieldOperator, value1, null);
     }
 
-    public ADExpression(String columnName, FieldOperator fieldOperator, String value1, String value2){
+    public ADExpression(String columnName, FieldOperator fieldOperator, String value1, String value2) {
         super();
         this.columnName = columnName;
         this.fieldOperator = fieldOperator;
@@ -83,10 +83,10 @@ public class ADExpression implements Serializable {
         private BooleanOperator    booleanOperator;
         private List<ADExpression> expressions      = new ArrayList<ADExpression>();
 
-        public ADPredicate(){
+        public ADPredicate() {
         }
 
-        public ADPredicate(BooleanOperator booleanOperator){
+        public ADPredicate(BooleanOperator booleanOperator) {
             super();
             this.booleanOperator = booleanOperator;
         }
@@ -139,7 +139,7 @@ public class ADExpression implements Serializable {
 
         private String symbol;
 
-        BooleanOperator(String symbol){
+        BooleanOperator(String symbol) {
             this.symbol = symbol;
         }
 
@@ -155,7 +155,7 @@ public class ADExpression implements Serializable {
 
         private String symbol;
 
-        FieldOperator(String symbol){
+        FieldOperator(String symbol) {
             this.symbol = symbol;
         }
 

@@ -3,19 +3,22 @@
 	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 	<named-query name="queryFieldVByWindow">
-		<query>SELECT f FROM ADFieldV f WHERE f.aDTabID=:windowID ORDER BY f.seqNo</query>
-	</named-query>
-	<named-query name="queryWindowByID">
-		<query>SELECT w FROM ADWindow w WHERE w.aDTabID=:windowID</query>
+		<query>SELECT f FROM ADFieldV f WHERE f.ADTabID=:windowID ORDER BY f.seqNo</query>
 	</named-query>
 	<named-query name="queryAllRef">
-		<query>SELECT r FROM ADRefListV r</query>
+		<query>SELECT r FROM ADReference r JOIN FETCH r.refLists WHERE r.refType=17</query>
+	</named-query>
+		<named-query name="queryMenuItem">
+		<query>SELECT t FROM ADTree t INNER JOIN FETCH t.ADMenus ORDER BY t.ADTreeID</query>
+	</named-query>
+	<named-query name="queryWindowByID">
+		<query>SELECT w FROM ADWindow w WHERE w.ADTabID=:windowID</query>
 	</named-query>
 	<named-query name="queryColumnByTable">
-		<query>SELECT c FROM ADColumn c WHERE c.aDTableID=:tableID</query>
+		<query>SELECT c FROM ADColumn c WHERE c.ADTableID=:tableID</query>
 	</named-query>
 	<named-query name="queryLookupColumnsByTable">
-		<query>SELECT c FROM ADColumn c WHERE c.aDTableID=:tableID AND c.identifier=true</query>
+		<query>SELECT c FROM ADColumn c WHERE c.ADTableID=:tableID AND c.identifier=true</query>
 	</named-query>
 	<named-query name="lookupClient">
 		<query>SELECT c FROM ADClient c WHERE c.name LIKE :filter</query>
@@ -35,6 +38,9 @@
 	<named-query name="lookupOrder">
 		<query>SELECT c FROM COrder c WHERE c.orderCd LIKE :filter</query>
 	</named-query>
+	<named-query name="lookupMove">
+		<query>SELECT c FROM CMoveV c WHERE c.contractNo LIKE :filter</query>
+	</named-query>
 	<named-query name="lookupVehicle">
 		<query>SELECT c FROM CVehicle c WHERE c.plateNo LIKE :filter</query>
 	</named-query>
@@ -42,9 +48,6 @@
 		<query>SELECT i FROM CInventoryV i WHERE i.inventoryStatus=0 AND i.ownerOrgID=:ownerOrgID AND i.destOrgID=:destOrgID</query>
 	</named-query>
 	<named-query name="queryMoveline">
-		<query>SELECT ml FROM CMoveLineV ml WHERE ml.cMoveID=:moveID</query>
-	</named-query>
-	<named-query name="queryMenuItem">
-		<query>SELECT t FROM ADTree t ORDER BY t.aDTreeID</query>
+		<query>SELECT ml FROM CMoveLineV ml WHERE ml.CMoveID=:moveID</query>
 	</named-query>
 </entity-mappings>
